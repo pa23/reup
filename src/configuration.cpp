@@ -19,11 +19,159 @@
 */
 
 #include "configuration.h"
+#include "constants.h"
+#include "identification.h"
+
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+using std::cout;
+using std::string;
+using std::vector;
+using std::ifstream;
+using std::ofstream;
 
 Configuration::Configuration() {
 }
 
-bool Configuration::readConfigFile() {
+void Configuration::readConfigFile() {
+
+    const string configFileName = Constants{}.configFile();
+    const string errorBlank = Constants{}.errorMsgBlank();
+    const string delimiter = Constants{}.parametersDelimiter();
+
+    boost::filesystem::path cfgfile(configFileName);
+
+    if ( !boost::filesystem::exists(cfgfile) ) {
+
+        cout << errorBlank << "Cofiguration file " << configFileName << " not found!\n"
+             << errorBlank << Identification{}.name() << " will create blank of configuration.\n"
+             << errorBlank << "Please edit file " << configFileName << " and reload program configuration.\n";
+
+        if ( !createBlank() ) {
+
+            cout << errorBlank << "Can not create file " << configFileName << "!\n"
+                 << errorBlank << "Default values will be used.\n";
+        }
+
+        return;
+    }
+
+    ifstream fin(configFileName);
+
+    if ( !fin ) {
+
+        cout << errorBlank << "Can not open file " << configFileName << " to read!\n";
+        return;
+    }
+
+    string s;
+    vector<string> elem;
+
+    while ( !fin.eof() ) {
+
+        getline(fin, s);
+
+        if ( !s.empty() ) {
+
+            boost::split(elem, s, boost::is_any_of(delimiter));
+
+            if ( elem.size() != 2 ) {
+
+                s.clear();
+                elem.clear();
+
+                continue;
+            }
+
+            if ( elem[0].compare("Local repository directory") == 0 ) {
+                m_localRepoDir = elem[1];
+            }
+            else if ( elem[0].compare("Remote repository directory") == 0 ) {
+                m_remoteRepoDir = elem[1];
+            }
+            else if ( elem[0].compare("HEX files directory") == 0 ) {
+                m_hexFilesDir = elem[1];
+            }
+            else if ( elem[0].compare("MPK files directory") == 0 ) {
+                m_mpkFilesDir = elem[1];
+            }
+            else if ( elem[0].compare("trimhex directory") == 0 ) {
+                m_trimhexDir = elem[1];
+            }
+            else if ( elem[0].compare("trimhex executable") == 0 ) {
+                m_trimhexExec = elem[1];
+            }
+            else if ( elem[0].compare("Archivator executable") == 0 ) {
+                m_archivExec = elem[1];
+            }
+            else if ( elem[0].compare("Archivator parameters") == 0 ) {
+                m_archivParam = elem[1];
+            }
+            else if ( elem[0].compare("File extensions for deletion") == 0 ) {
+
+                ma_fileExtForDel.clear();
+                boost::split(ma_fileExtForDel, elem[1], boost::is_any_of(","));
+            }
+        }
+
+        s.clear();
+        elem.clear();
+    }
+
+    fin.close();
+}
+
+bool Configuration::createBlank() const {
+
+    const string configFileName = Constants{}.configFile();
+    const string errorBlank = Constants{}.errorMsgBlank();
+    const string delimiter = Constants{}.parametersDelimiter();
+
+    ofstream fout(configFileName);
+
+    if ( !fout ) {
+
+        cout << errorBlank << "Can not open file " << configFileName << " to write!\n";
+        return false;
+    }
+
+    fout << "//\n"
+         << "// This is " << Identification{}.name() << " configuration file.\n"
+         << "// Parameter-Value delimiter is symbol \"" << delimiter << "\".\n"
+         << "// Text after \"//\" is comment.\n"
+         << "//\n\n";
+
+    fout << "Local repository directory"   << delimiter << m_localRepoDir  << "\n"
+         << "Remote repository directory"  << delimiter << m_remoteRepoDir << "\n"
+         << "HEX files directory"          << delimiter << m_hexFilesDir   << "\n"
+         << "MPK files directory"          << delimiter << m_mpkFilesDir   << "\n"
+         << "trimhex directory"            << delimiter << m_trimhexDir    << "\n"
+         << "trimhex executable"           << delimiter << m_trimhexExec   << "\n"
+         << "Archivator executable"        << delimiter << m_archivExec    << "\n"
+         << "Archivator parameters"        << delimiter << m_archivParam   << "\n"
+         << "File extensions for deletion" << delimiter;
+
+    for ( size_t i=0; i<ma_fileExtForDel.size(); i++ ) {
+
+        fout << ma_fileExtForDel[i];
+
+        if ( i == ma_fileExtForDel.size()-1 ) {
+
+            fout << "\n";
+        }
+        else {
+
+            fout << ",";
+        }
+    }
+
+    fout.close();
 
     return true;
 }

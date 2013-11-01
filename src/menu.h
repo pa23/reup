@@ -2,7 +2,7 @@
     reup
     Automatization of support YMZ-530 ECU SW repository.
 
-    File: constants.h
+    File: menu.h
 
     Copyright (C) 2013 Artem Petrov <pa2311@gmail.com>
 
@@ -18,28 +18,30 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef MENU_H
+#define MENU_H
 
-#include <string>
+#include <memory>
 
-struct Constants {
+#include "configuration.h"
 
-    std::string configFile() const {
-        return "reup.conf";
-    }
+enum {
 
-    std::string parametersDelimiter() const {
-        return "=";
-    }
-
-    std::string errorMsgBlank() const {
-        return "reup ERROR =>\t";
-    }
-
-    std::string msgBlank() const {
-        return "reup ->\t";
-    }
+    MENU_TRIMHEX,
+    MENU_ARCHHEX,
+    MENU_ADDNEW,
+    MENU_ARCHREPO,
+    MENU_CLEANDIR,
+    MENU_RELOADCONF,
+    MENU_EXIT
 };
 
-#endif // CONSTANTS_H
+void showMenu();
+
+void trimHex();
+void archHex();
+void addNewToRepo();
+void archRepo();
+void cleanDir();
+
+#endif // MENU_H

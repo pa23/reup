@@ -30,7 +30,7 @@ public:
 
     Configuration();
 
-    bool readConfigFile();
+    void readConfigFile();
 
     std::string val_localRepoDir() const {
         return m_localRepoDir;
@@ -57,10 +57,12 @@ public:
         return m_archivParam;
     }
     std::vector<std::string> val_fileExtToDel() const {
-        return ma_fileExtToDel;
+        return ma_fileExtForDel;
     }
 
 private:
+
+    bool createBlank() const;
 
     std::string m_localRepoDir  = "YMZ-530_ECU_SW_REPO";
     std::string m_remoteRepoDir = "";
@@ -70,8 +72,7 @@ private:
     std::string m_trimhexExec   = "trimmhex.bat";
     std::string m_archivExec    = "7z";
     std::string m_archivParam   = "a";
-
-    std::vector<std::string> ma_fileExtToDel =
+    std::vector<std::string> ma_fileExtForDel =
     {"hex", "7z", "zip", "ini", "txt"};
 
 };

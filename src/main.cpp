@@ -19,10 +19,57 @@
 */
 
 #include <iostream>
+#include <memory>
+
+#include "configuration.h"
+#include "identification.h"
+#include "menu.h"
+
+using std::unique_ptr;
+using std::cout;
+using std::cin;
 
 int main() {
 
-    //
+    cout << "\n\t" << Identification{}.name() << " v" << Identification{}.version() << "\n"
+         << "\t" << Identification{}.description() << "\n";
+
+    unique_ptr<Configuration> conf(new Configuration());
+    conf->readConfigFile();
+
+    bool work = true;
+    size_t currTask = MENU_EXIT;
+
+    while ( work ) {
+
+        showMenu();
+        cin >> currTask;
+
+        if ( currTask == MENU_TRIMHEX ) {
+            trimHex();
+        }
+        else if ( currTask == MENU_ARCHHEX ) {
+            archHex();
+        }
+        else if ( currTask == MENU_ADDNEW ) {
+            addNewToRepo();
+        }
+        else if ( currTask == MENU_ARCHREPO ) {
+            archRepo();
+        }
+        else if ( currTask == MENU_CLEANDIR ) {
+            cleanDir();
+        }
+        else if ( currTask == MENU_RELOADCONF ) {
+            conf->readConfigFile();
+        }
+        else if ( currTask == MENU_EXIT ) {
+            work = false;
+        }
+        else {
+            work = false;
+        }
+    }
 
     return 0;
 }

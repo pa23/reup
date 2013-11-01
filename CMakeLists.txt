@@ -1,11 +1,28 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(reup)
 set(APP_NAME reup)
 set(APP_VERSION "1.0.0")
+
+project(${APP_NAME})
+
 set(CMAKE_BUILD_TYPE RELEASE)
 
-aux_source_directory(src SRC_LIST)
+#aux_source_directory(src SRC_LIST)
+
+set(
+    HEADERS
+    src/identification.h
+    src/constants.h
+    src/configuration.h
+    src/menu.h
+)
+
+set(
+    SOURCES
+    src/main.cpp
+    src/configuration.cpp
+    src/menu.cpp
+)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -W -pedantic")
 
@@ -29,7 +46,7 @@ else()
     set(BUILD_SHARED_LIBS ON)
 endif()
 
-add_executable(${PROJECT_NAME} ${SRC_LIST})
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 target_link_libraries(
     ${PROJECT_NAME}
     ${Boost_SYSTEM_LIBRARY}
