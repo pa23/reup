@@ -46,19 +46,19 @@ int main() {
         cin >> currTask;
 
         if ( currTask == MENU_TRIMHEX ) {
-            trimHex();
+            trimHex(conf);
         }
         else if ( currTask == MENU_ARCHHEX ) {
-            archHex();
+            archHex(conf);
         }
         else if ( currTask == MENU_ADDNEW ) {
             addNewToRepo();
         }
         else if ( currTask == MENU_ARCHREPO ) {
-            archRepo();
+            archRepo(conf);
         }
         else if ( currTask == MENU_CLEANDIR ) {
-            cleanDir();
+            cleanDir(conf);
         }
         else if ( currTask == MENU_RELOADCONF ) {
             conf->readConfigFile();

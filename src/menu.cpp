@@ -21,10 +21,19 @@
 #include "menu.h"
 #include "identification.h"
 #include "configuration.h"
+#include "auxfunctions.h"
 
 #include <iostream>
+#include <string>
+#include <vector>
+#include <ctime>
+
+#include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 
 using std::cout;
+using std::string;
+using std::vector;
 
 void showMenu() {
 
@@ -39,14 +48,53 @@ void showMenu() {
          << "Your select: ";
 }
 
-void trimHex() {
+void trimHex(const std::unique_ptr<Configuration> &conf) {
 
-    //
+    string path = conf->val_localRepoDir() + "/" + conf->val_trimhexDir();
+    string ext = ".hex";
+    vector<string> fileNames;
+
+    findFiles(path, ext, fileNames);
+
+    string trimComm = conf->val_trimhexExec();
+
+    string realProgPath = boost::filesystem::current_path().string();
+    boost::filesystem::current_path(path);
+
+    for ( auto fileName : fileNames ) {
+
+        if ( boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) {
+            system((trimComm + " " + fileName).c_str());
+        }
+    }
+
+    boost::filesystem::current_path(realProgPath);
 }
 
-void archHex() {
+void archHex(const std::unique_ptr<Configuration> &conf) {
 
-    //
+    string path = conf->val_localRepoDir() + "/" + conf->val_trimhexDir();
+    string ext = ".hex";
+    vector<string> fileNames;
+
+    findFiles(path, ext, fileNames);
+
+    string archComm = conf->val_archivExec() + " " + conf->val_archivParam();
+
+    string realProgPath = boost::filesystem::current_path().string();
+    boost::filesystem::current_path(path);
+
+    for ( auto fileName : fileNames ) {
+
+        if ( boost::filesystem::exists(boost::filesystem::path(fileName+".7z")) ||
+             boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) {
+            continue;
+        }
+
+        system((archComm + " " + fileName + ".7z " + fileName).c_str());
+    }
+
+    boost::filesystem::current_path(realProgPath);
 }
 
 void addNewToRepo() {
@@ -54,12 +102,34 @@ void addNewToRepo() {
     //
 }
 
-void archRepo() {
+void archRepo(const std::unique_ptr<Configuration> &conf) {
 
-    //
+    system((conf->val_archivExec()
+            + " "
+            + conf->val_archivParam()
+            + " "
+            + conf->val_localRepoDir()
+            + "_"
+            + boost::lexical_cast<string>(time(NULL))
+            + ".7z "
+            + conf->val_localRepoDir()).c_str());
 }
 
-void cleanDir() {
+void cleanDir(const std::unique_ptr<Configuration> &conf) {
 
-    //
+    string path = conf->val_localRepoDir() + "/" + conf->val_trimhexDir();
+    vector<string> fileNames;
+
+    for ( auto ext : conf->val_fileExtToDel() ) {
+        findFiles(path, "."+ext, fileNames);
+    }
+
+    string realProgPath = boost::filesystem::current_path().string();
+    boost::filesystem::current_path(path);
+
+    for ( auto fileName : fileNames ) {
+        boost::filesystem::remove(boost::filesystem::path(fileName));
+    }
+
+    boost::filesystem::current_path(realProgPath);
 }

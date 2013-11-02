@@ -89,31 +89,31 @@ void Configuration::readConfigFile() {
                 continue;
             }
 
-            if ( elem[0].compare("Local repository directory") == 0 ) {
+            if ( elem[0] == "Local repository directory" ) {
                 m_localRepoDir = elem[1];
             }
-            else if ( elem[0].compare("Remote repository directory") == 0 ) {
+            else if ( elem[0] == "Remote repository directory" ) {
                 m_remoteRepoDir = elem[1];
             }
-            else if ( elem[0].compare("HEX files directory") == 0 ) {
+            else if ( elem[0] == "HEX files directory" ) {
                 m_hexFilesDir = elem[1];
             }
-            else if ( elem[0].compare("MPK files directory") == 0 ) {
+            else if ( elem[0] == "MPK files directory" ) {
                 m_mpkFilesDir = elem[1];
             }
-            else if ( elem[0].compare("trimhex directory") == 0 ) {
+            else if ( elem[0] == "trimhex directory" ) {
                 m_trimhexDir = elem[1];
             }
-            else if ( elem[0].compare("trimhex executable") == 0 ) {
+            else if ( elem[0] == "trimhex executable" ) {
                 m_trimhexExec = elem[1];
             }
-            else if ( elem[0].compare("Archivator executable") == 0 ) {
+            else if ( elem[0] == "Archivator executable" ) {
                 m_archivExec = elem[1];
             }
-            else if ( elem[0].compare("Archivator parameters") == 0 ) {
+            else if ( elem[0] == "Archivator parameters" ) {
                 m_archivParam = elem[1];
             }
-            else if ( elem[0].compare("File extensions for deletion") == 0 ) {
+            else if ( elem[0] == "File extensions for deletion" ) {
 
                 ma_fileExtForDel.clear();
                 boost::split(ma_fileExtForDel, elem[1], boost::is_any_of(","));
@@ -162,11 +162,9 @@ bool Configuration::createBlank() const {
         fout << ma_fileExtForDel[i];
 
         if ( i == ma_fileExtForDel.size()-1 ) {
-
             fout << "\n";
         }
         else {
-
             fout << ",";
         }
     }

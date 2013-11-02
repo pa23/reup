@@ -6,6 +6,7 @@ set(APP_VERSION "1.0.0")
 project(${APP_NAME})
 
 set(CMAKE_BUILD_TYPE RELEASE)
+set(EXECUTABLE_OUTPUT_PATH "bin")
 
 #aux_source_directory(src SRC_LIST)
 
@@ -15,6 +16,7 @@ set(
     src/constants.h
     src/configuration.h
     src/menu.h
+    src/auxfunctions.h
 )
 
 set(
@@ -22,6 +24,7 @@ set(
     src/main.cpp
     src/configuration.cpp
     src/menu.cpp
+    src/auxfunctions.cpp
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -W -pedantic")

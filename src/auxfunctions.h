@@ -2,7 +2,7 @@
     reup
     Automatization of support YMZ-530 ECU SW repository.
 
-    File: menu.h
+    File: auxfunctions.h
 
     Copyright (C) 2013 Artem Petrov <pa2311@gmail.com>
 
@@ -18,30 +18,16 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MENU_H
-#define MENU_H
+#ifndef AUXFUNCTIONS_H
+#define AUXFUNCTIONS_H
 
-#include <memory>
+#include <string>
+#include <vector>
 
-#include "configuration.h"
+void findFiles(
+        const std::string &,       // path
+        const std::string &,       // file extension
+        std::vector<std::string> & // return
+        );
 
-enum {
-
-    MENU_TRIMHEX,
-    MENU_ARCHHEX,
-    MENU_ADDNEW,
-    MENU_ARCHREPO,
-    MENU_CLEANDIR,
-    MENU_RELOADCONF,
-    MENU_EXIT
-};
-
-void showMenu();
-
-void trimHex(const std::unique_ptr<Configuration> &);
-void archHex(const std::unique_ptr<Configuration> &);
-void addNewToRepo();
-void archRepo(const std::unique_ptr<Configuration> &);
-void cleanDir(const std::unique_ptr<Configuration> &);
-
-#endif // MENU_H
+#endif // AUXFUNCTIONS_H
