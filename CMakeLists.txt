@@ -12,11 +12,11 @@ set(EXECUTABLE_OUTPUT_PATH "bin")
 
 set(
     HEADERS
-    src/identification.h
-    src/constants.h
-    src/configuration.h
-    src/menu.h
-    src/auxfunctions.h
+    src/identification.hpp
+    src/constants.hpp
+    src/configuration.hpp
+    src/menu.hpp
+    src/auxfunctions.hpp
 )
 
 set(

@@ -2,7 +2,7 @@
     reup
     Automatization of support YMZ-530 ECU SW repository.
 
-    File: configuration.h
+    File: configuration.hpp
 
     Copyright (C) 2013 Artem Petrov <pa2311@gmail.com>
 
@@ -18,8 +18,8 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIGURATION_H
-#define CONFIGURATION_H
+#ifndef CONFIGURATION_HPP
+#define CONFIGURATION_HPP
 
 #include <string>
 #include <vector>
@@ -77,4 +77,4 @@ private:
 
 };
 
-#endif // CONFIGURATION_H
+#endif // CONFIGURATION_HPP

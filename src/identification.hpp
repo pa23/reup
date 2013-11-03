@@ -2,7 +2,7 @@
     reup
     Automatization of support YMZ-530 ECU SW repository.
 
-    File: identification.h
+    File: identification.hpp
 
     Copyright (C) 2013 Artem Petrov <pa2311@gmail.com>
 
@@ -18,8 +18,8 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IDENTIFICATION_H
-#define IDENTIFICATION_H
+#ifndef IDENTIFICATION_HPP
+#define IDENTIFICATION_HPP
 
 #include <string>
 
@@ -69,4 +69,4 @@ struct Identification {
     }
 };
 
-#endif // IDENTIFICATION_H
+#endif // IDENTIFICATION_HPP

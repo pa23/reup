@@ -18,9 +18,9 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "configuration.h"
-#include "constants.h"
-#include "identification.h"
+#include "configuration.hpp"
+#include "constants.hpp"
+#include "identification.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
@@ -54,7 +54,6 @@ void Configuration::readConfigFile() {
              << errorBlank << "Please edit file " << configFileName << " and reload program configuration.\n";
 
         if ( !createBlank() ) {
-
             cout << errorBlank << "Can not create file " << configFileName << "!\n"
                  << errorBlank << "Default values will be used.\n";
         }
@@ -65,7 +64,6 @@ void Configuration::readConfigFile() {
     ifstream fin(configFileName);
 
     if ( !fin ) {
-
         cout << errorBlank << "Can not open file " << configFileName << " to read!\n";
         return;
     }
@@ -136,7 +134,6 @@ bool Configuration::createBlank() const {
     ofstream fout(configFileName);
 
     if ( !fout ) {
-
         cout << errorBlank << "Can not open file " << configFileName << " to write!\n";
         return false;
     }

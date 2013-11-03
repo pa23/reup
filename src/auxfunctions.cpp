@@ -18,7 +18,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "auxfunctions.h"
+#include "auxfunctions.hpp"
 
 #include <string>
 #include <vector>

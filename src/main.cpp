@@ -21,9 +21,9 @@
 #include <iostream>
 #include <memory>
 
-#include "configuration.h"
-#include "identification.h"
-#include "menu.h"
+#include "configuration.hpp"
+#include "identification.hpp"
+#include "menu.hpp"
 
 using std::unique_ptr;
 using std::cout;
@@ -52,7 +52,7 @@ int main() {
             archHex(conf);
         }
         else if ( currTask == MENU_ADDNEW ) {
-            addNewToRepo();
+            addNewToRepo(conf);
         }
         else if ( currTask == MENU_ARCHREPO ) {
             archRepo(conf);

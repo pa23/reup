@@ -18,10 +18,10 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "menu.h"
-#include "identification.h"
-#include "configuration.h"
-#include "auxfunctions.h"
+#include "menu.hpp"
+#include "identification.hpp"
+#include "configuration.hpp"
+#include "auxfunctions.hpp"
 
 #include <iostream>
 #include <string>
@@ -97,7 +97,7 @@ void archHex(const std::unique_ptr<Configuration> &conf) {
     boost::filesystem::current_path(realProgPath);
 }
 
-void addNewToRepo() {
+void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
 
     //
 }
