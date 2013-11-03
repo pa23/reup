@@ -30,7 +30,7 @@ struct Identification {
     }
 
     std::string version() const {
-        return "1.0.3";
+        return "1.0.4";
     }
 
     std::string description() const {
@@ -45,8 +45,8 @@ struct Identification {
         return "Artem Petrov <pa2311@gmail.com>";
     }
 
-    std::string codeHosting() const {
-        return "";
+    std::string sourceCodeHosting() const {
+        return "https://github.com/pa23/reup";
     }
 
     std::string authorsBlog() const {
@@ -54,18 +54,11 @@ struct Identification {
     }
 
     std::string licenseInformation() const {
-        return "This program is free software: you can redistribute it "
-                "and/or modify it under the terms of the GNU General "
-                "Public License as published by the Free Software "
-                "Foundation, either version 3 of the License, or (at "
-                "your option) any later version. This program is "
-                "distributed in the hope that it will be useful, but "
-                "WITHOUT ANY WARRANTY; without even the implied warranty "
-                "of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. "
-                "See the GNU General Public License for more details. "
-                "You should have received a copy of the GNU General Public "
-                "License along with this program. If not, see "
-                "<http://www.gnu.org/licenses/>.";
+        return "This program comes with ABSOLUTELY NO WARRANTY. This is free software,\n"
+                "and you are welcome to redistribute it under the terms of the GNU General\n"
+                "Public License version 3.\n"
+                "You should have received a copy of the GNU General Public License along\n"
+                "with this program. If not, see <http://www.gnu.org/licenses/>.";
     }
 };
 

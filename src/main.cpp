@@ -32,7 +32,11 @@ using std::cin;
 int main() {
 
     cout << "\n\t" << Identification{}.name() << " v" << Identification{}.version() << "\n"
-         << "\t" << Identification{}.description() << "\n";
+         << "\t" << Identification{}.description() << "\n\n"
+         << "Copyright (C) " << Identification{}.copyrightYears() << " " << Identification{}.authors() << "\n\n"
+         << "Source code hosting: " << Identification{}.sourceCodeHosting() << "\n"
+         << "Author's blog (RU): " << Identification{}.authorsBlog() << "\n\n"
+         << Identification{}.licenseInformation() << "\n";
 
     unique_ptr<Configuration> conf(new Configuration());
     conf->readConfigFile();
