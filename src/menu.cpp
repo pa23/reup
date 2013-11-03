@@ -43,34 +43,36 @@ using std::vector;
 void showMenu() {
 
     cout << "\nMenu:\n"
-         << "  1. Trim available hex files\n"
-         << "  2. Archive trimmed hex files\n"
-         << "  3. Add new hex and mpk files to repository\n"
-         << "  4. Archive repository\n"
-         << "  5. Clean trimhex directory\n"
-         << "  6. Reload program configuration\n"
-         << "  0. Exit\n\n"
+         << "  " << MENU_TRIMHEX    << ". Trim available hex files\n"
+         << "  " << MENU_ARCHHEX    << ". Archive trimmed hex files\n"
+         << "  " << MENU_ADDNEW     << ". Add new hex and mpk files to repository\n"
+         << "  " << MENU_ARCHREPO   << ". Archive repository\n"
+         << "  " << MENU_CLEANDIR   << ". Clean trimhex directory\n"
+         << "  " << MENU_RELOADCONF << ". Reload program configuration\n"
+         << "  " << MENU_EXIT       << ". Exit\n\n"
          << "Your select: ";
 }
 
 void trimHex(const std::unique_ptr<Configuration> &conf) {
 
-    const string path = conf->val_localRepoDir() + "/" + conf->val_trimhexDir();
+    const boost::filesystem::path localRepoDir(conf->val_localRepoDir());
+    const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
+    const boost::filesystem::path p = localRepoDir / trimhexDir;
 
-    if ( !boost::filesystem::exists(path) ) {
+    if ( !boost::filesystem::exists(p) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << path << "\" not exists!\n";
+        cout << Constants{}.errorMsgBlank() << "Path \"" << p.string() << "\" not exists!\n";
         return;
     }
 
     vector<string> fileNames;
 
-    findFiles(path, ".hex", fileNames);
+    findFiles(p.string(), ".hex", fileNames);
 
     const string trimComm = conf->val_trimhexExec();
 
-    const string realProgPath = boost::filesystem::current_path().string();
-    boost::filesystem::current_path(path);
+    const boost::filesystem::path realProgPath = boost::filesystem::current_path();
+    boost::filesystem::current_path(p);
 
     for ( const auto fileName : fileNames ) {
 
@@ -85,22 +87,24 @@ void trimHex(const std::unique_ptr<Configuration> &conf) {
 
 void archHex(const std::unique_ptr<Configuration> &conf) {
 
-    const string path = conf->val_localRepoDir() + "/" + conf->val_trimhexDir();
+    const boost::filesystem::path localRepoDir(conf->val_localRepoDir());
+    const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
+    const boost::filesystem::path p = localRepoDir / trimhexDir;
 
-    if ( !boost::filesystem::exists(path) ) {
+    if ( !boost::filesystem::exists(p) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << path << "\" not exists!\n";
+        cout << Constants{}.errorMsgBlank() << "Path \"" << p.string() << "\" not exists!\n";
         return;
     }
 
     vector<string> fileNames;
 
-    findFiles(path, ".hex", fileNames);
+    findFiles(p.string(), ".hex", fileNames);
 
     const string archComm = conf->val_archivExec() + " " + conf->val_archivParam();
 
-    const string realProgPath = boost::filesystem::current_path().string();
-    boost::filesystem::current_path(path);
+    const boost::filesystem::path realProgPath = boost::filesystem::current_path();
+    boost::filesystem::current_path(p);
 
     for ( const auto fileName : fileNames ) {
 
@@ -118,27 +122,30 @@ void archHex(const std::unique_ptr<Configuration> &conf) {
 
 void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
 
-    const string newPath = conf->val_localRepoDir() + "/" + conf->val_trimhexDir();
+    const boost::filesystem::path localRepoDir(conf->val_localRepoDir());
+    const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
+    const boost::filesystem::path newPath = localRepoDir / trimhexDir;
 
     if ( !boost::filesystem::exists(newPath) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << newPath << "\" not exists!\n";
+        cout << Constants{}.errorMsgBlank() << "Path \"" << newPath.string() << "\" not exists!\n";
         return;
     }
 
-    const string localRepoHexPath = conf->val_localRepoDir() + "/" + conf->val_hexFilesDir();
+    const boost::filesystem::path hexFilesDir(conf->val_hexFilesDir());
+    const boost::filesystem::path localRepoHexPath = localRepoDir / hexFilesDir;
 
     if ( !boost::filesystem::exists(localRepoHexPath) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoHexPath << "\" not exists!\n";
+        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoHexPath.string() << "\" not exists!\n";
         return;
     }
 
     vector<string> newFileNames;
-    findFiles(newPath, ".hex", newFileNames);
+    findFiles(newPath.string(), ".hex", newFileNames);
 
     vector<string> localRepoFileNames;
-    findFiles(localRepoHexPath, ".hex", localRepoFileNames);
+    findFiles(localRepoHexPath.string(), ".hex", localRepoFileNames);
 
     vector<string> parts;
     boost::regex regexp;
@@ -159,14 +166,14 @@ void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
 
             if ( boost::regex_match(localRepoFileName, regexp) ) {
                 boost::filesystem::remove(
-                            boost::filesystem::path(localRepoHexPath + "/" + localRepoFileName)
+                            localRepoHexPath / boost::filesystem::path(localRepoFileName)
                             );
             }
         }
 
         boost::filesystem::copy_file(
-                    boost::filesystem::path(newPath + "/" + newFileName),
-                    boost::filesystem::path(localRepoHexPath + "/" + newFileName),
+                    newPath / boost::filesystem::path(newFileName),
+                    localRepoHexPath / boost::filesystem::path(newFileName),
                     boost::filesystem::copy_option::overwrite_if_exists
                     );
     }
@@ -174,16 +181,17 @@ void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
     newFileNames.clear();
     localRepoFileNames.clear();
 
-    const string localRepoMpkPath = conf->val_localRepoDir() + "/" + conf->val_mpkFilesDir();
+    const boost::filesystem::path mpkFilesDir(conf->val_mpkFilesDir());
+    const boost::filesystem::path localRepoMpkPath = localRepoDir / mpkFilesDir;
 
     if ( !boost::filesystem::exists(localRepoMpkPath) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoMpkPath << "\" not exists!\n";
+        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoMpkPath.string() << "\" not exists!\n";
         return;
     }
 
-    findFiles(newPath, ".zip", newFileNames);
-    findFiles(localRepoMpkPath, ".zip", localRepoFileNames);
+    findFiles(newPath.string(), ".zip", newFileNames);
+    findFiles(localRepoMpkPath.string(), ".zip", localRepoFileNames);
 
     for ( const auto newFileName : newFileNames ) {
 
@@ -201,14 +209,14 @@ void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
 
             if ( boost::regex_match(localRepoFileName, regexp) ) {
                 boost::filesystem::remove(
-                            boost::filesystem::path(localRepoMpkPath + "/" + localRepoFileName)
+                            localRepoMpkPath / boost::filesystem::path(localRepoFileName)
                             );
             }
         }
 
         boost::filesystem::copy_file(
-                    boost::filesystem::path(newPath + "/" + newFileName),
-                    boost::filesystem::path(localRepoMpkPath + "/" + newFileName),
+                    newPath / boost::filesystem::path(newFileName),
+                    localRepoMpkPath / boost::filesystem::path(newFileName),
                     boost::filesystem::copy_option::overwrite_if_exists
                     );
     }
@@ -237,22 +245,24 @@ void archRepo(const std::unique_ptr<Configuration> &conf) {
 
 void cleanDir(const std::unique_ptr<Configuration> &conf) {
 
-    const string path = conf->val_localRepoDir() + "/" + conf->val_trimhexDir();
+    const boost::filesystem::path localRepoDir(conf->val_localRepoDir());
+    const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
+    const boost::filesystem::path p = localRepoDir / trimhexDir;
 
-    if ( !boost::filesystem::exists(path) ) {
+    if ( !boost::filesystem::exists(p) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << path << "\" not exists!\n";
+        cout << Constants{}.errorMsgBlank() << "Path \"" << p.string() << "\" not exists!\n";
         return;
     }
 
     vector<string> fileNames;
 
     for ( const auto ext : conf->val_fileExtToDel() ) {
-        findFiles(path, "."+ext, fileNames);
+        findFiles(p.string(), "."+ext, fileNames);
     }
 
-    const string realProgPath = boost::filesystem::current_path().string();
-    boost::filesystem::current_path(path);
+    const boost::filesystem::path realProgPath = boost::filesystem::current_path();
+    boost::filesystem::current_path(p);
 
     for ( const auto fileName : fileNames ) {
         boost::filesystem::remove(boost::filesystem::path(fileName));
