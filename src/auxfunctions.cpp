@@ -34,7 +34,7 @@ void findFiles(
         vector<string> &fileNames
         ) {
 
-    boost::filesystem::path rootDir(path);
+    const boost::filesystem::path rootDir(path);
 
     if ( !boost::filesystem::exists(rootDir) ||
          !boost::filesystem::is_directory(rootDir) ) {

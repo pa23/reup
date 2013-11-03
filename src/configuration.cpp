@@ -45,16 +45,16 @@ void Configuration::readConfigFile() {
     const string errorBlank = Constants{}.errorMsgBlank();
     const string delimiter = Constants{}.parametersDelimiter();
 
-    boost::filesystem::path cfgfile(configFileName);
+    const boost::filesystem::path cfgfile(configFileName);
 
     if ( !boost::filesystem::exists(cfgfile) ) {
 
-        cout << errorBlank << "Cofiguration file " << configFileName << " not found!\n"
+        cout << errorBlank << "Cofiguration file \"" << configFileName << "\" not found!\n"
              << errorBlank << Identification{}.name() << " will create blank of configuration.\n"
-             << errorBlank << "Please edit file " << configFileName << " and reload program configuration.\n";
+             << errorBlank << "Please edit file \"" << configFileName << "\" and reload program configuration.\n";
 
         if ( !createBlank() ) {
-            cout << errorBlank << "Can not create file " << configFileName << "!\n"
+            cout << errorBlank << "Can not create file \"" << configFileName << "\"!\n"
                  << errorBlank << "Default values will be used.\n";
         }
 
@@ -64,7 +64,7 @@ void Configuration::readConfigFile() {
     ifstream fin(configFileName);
 
     if ( !fin ) {
-        cout << errorBlank << "Can not open file " << configFileName << " to read!\n";
+        cout << errorBlank << "Can not open file \"" << configFileName << "\" to read!\n";
         return;
     }
 
@@ -134,7 +134,7 @@ bool Configuration::createBlank() const {
     ofstream fout(configFileName);
 
     if ( !fout ) {
-        cout << errorBlank << "Can not open file " << configFileName << " to write!\n";
+        cout << errorBlank << "Can not open file \"" << configFileName << "\" to write!\n";
         return false;
     }
 

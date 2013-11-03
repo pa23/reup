@@ -36,7 +36,7 @@ else()
     set(Boost_USE_STATIC_LIBS OFF)
     set(Boost_USE_SHARED_LIBS ON)
 endif()
-find_package(Boost COMPONENTS system filesystem REQUIRED)
+find_package(Boost COMPONENTS system filesystem regex REQUIRED)
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
 endif()
@@ -54,5 +54,6 @@ target_link_libraries(
     ${PROJECT_NAME}
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_REGEX_LIBRARY}
     ${Boost_LIBRARIES}
 )

@@ -27,13 +27,13 @@
 
 enum {
 
+    MENU_EXIT,
     MENU_TRIMHEX,
     MENU_ARCHHEX,
     MENU_ADDNEW,
     MENU_ARCHREPO,
     MENU_CLEANDIR,
-    MENU_RELOADCONF,
-    MENU_EXIT
+    MENU_RELOADCONF
 };
 
 void showMenu();
