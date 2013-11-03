@@ -153,7 +153,7 @@ void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
 
         for ( const auto localRepoFileName : localRepoFileNames ) {
 
-            regexp = R"(.*)" + parts[2] + R"(.*(\.hex){1}$)";
+            regexp = R"(.*)" + parts[2] + R"(_+.*(\.hex){1}$)";
 
             if ( boost::regex_match(localRepoFileName, regexp) ) {
                 boost::filesystem::remove(
@@ -196,7 +196,7 @@ void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
 
         for ( const auto localRepoFileName : localRepoFileNames ) {
 
-            regexp = R"(.*)" + parts[2] + R"(.*(\.zip){1}$)";
+            regexp = R"(.*)" + parts[2] + R"(_+.*(\.zip){1}$)";
 
             if ( boost::regex_match(localRepoFileName, regexp) ) {
                 boost::filesystem::remove(
