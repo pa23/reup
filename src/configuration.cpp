@@ -22,13 +22,15 @@
 #include "constants.hpp"
 #include "identification.hpp"
 
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp>
-
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
+
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 using std::cout;
 using std::string;

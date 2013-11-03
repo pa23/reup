@@ -24,10 +24,14 @@
 #include <string>
 #include <vector>
 
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+
+#include <boost/filesystem.hpp>
+
 void findFiles(
-        const std::string &,       // path
-        const std::string &,       // file extension
-        std::vector<std::string> & // return
+        const boost::filesystem::path &, // path
+        const std::string &,             // file extension
+        std::vector<std::string> &       // return
         );
 
 #endif // AUXFUNCTIONS_HPP

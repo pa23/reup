@@ -23,18 +23,18 @@
 #include <string>
 #include <vector>
 
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+
 #include <boost/filesystem.hpp>
 
 using std::string;
 using std::vector;
 
 void findFiles(
-        const string &path,
+        const boost::filesystem::path &rootDir,
         const string &extension,
         vector<string> &fileNames
         ) {
-
-    const boost::filesystem::path rootDir(path);
 
     if ( !boost::filesystem::exists(rootDir) ||
          !boost::filesystem::is_directory(rootDir) ) {
