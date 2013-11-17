@@ -31,8 +31,9 @@ enum {
     MENU_TRIMHEX,
     MENU_ARCHHEX,
     MENU_ADDNEW,
-    MENU_ARCHREPO,
     MENU_CLEANDIR,
+    MENU_PUBREPO,
+    MENU_ARCHREPO,
     MENU_RELOADCONF
 };
 
@@ -41,7 +42,8 @@ void showMenu();
 void trimHex(const std::unique_ptr<Configuration> &);
 void archHex(const std::unique_ptr<Configuration> &);
 void addNewToRepo(const std::unique_ptr<Configuration> &);
-void archRepo(const std::unique_ptr<Configuration> &);
 void cleanDir(const std::unique_ptr<Configuration> &);
+void publishRepo(const std::unique_ptr<Configuration> &);
+void archRepo(const std::unique_ptr<Configuration> &);
 
 #endif // MENU_HPP

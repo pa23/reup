@@ -46,8 +46,9 @@ void showMenu() {
          << "  " << MENU_TRIMHEX    << ". Trim available hex files\n"
          << "  " << MENU_ARCHHEX    << ". Archive trimmed hex files\n"
          << "  " << MENU_ADDNEW     << ". Add new hex and mpk files to repository\n"
-         << "  " << MENU_ARCHREPO   << ". Archive repository\n"
          << "  " << MENU_CLEANDIR   << ". Clean trimhex directory\n"
+         << "  " << MENU_PUBREPO    << ". Publish repository\n"
+         << "  " << MENU_ARCHREPO   << ". Archive repository\n"
          << "  " << MENU_RELOADCONF << ". Reload program configuration\n"
          << "  " << MENU_EXIT       << ". Exit\n\n"
          << "Your select: ";
@@ -213,27 +214,6 @@ void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
     }
 }
 
-void archRepo(const std::unique_ptr<Configuration> &conf) {
-
-    string localRepoDirectory = conf->val_localRepoDir();
-
-    if ( !boost::filesystem::exists(localRepoDirectory) ) {
-
-        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoDirectory << "\" not exists!\n";
-        return;
-    }
-
-    system((conf->val_archivExec()
-            + " "
-            + conf->val_archivParam()
-            + " "
-            + localRepoDirectory
-            + "_"
-            + boost::lexical_cast<string>(time(NULL))
-            + ".7z "
-            + localRepoDirectory).c_str());
-}
-
 void cleanDir(const std::unique_ptr<Configuration> &conf) {
 
     const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
@@ -258,4 +238,98 @@ void cleanDir(const std::unique_ptr<Configuration> &conf) {
     }
 
     boost::filesystem::current_path(realProgPath);
+}
+
+void publishRepo(const std::unique_ptr<Configuration> &conf) {
+
+    if ( conf->val_remoteRepoDir().empty() ) {
+
+        cout << Constants{}.errorMsgBlank() << "Remote repository directory not defined! Edit configuration file.\n";
+        return;
+    }
+
+    const boost::filesystem::path remoteRepoDirectory(conf->val_remoteRepoDir());
+
+    if ( !boost::filesystem::exists(remoteRepoDirectory) ) {
+
+        cout << Constants{}.errorMsgBlank() << "Path \"" << remoteRepoDirectory.string() << "\" not exists!\n";
+        return;
+    }
+
+    const boost::filesystem::path localRepoDirectory(conf->val_localRepoDir());
+    const boost::filesystem::path hexDirectory(conf->val_hexFilesDir());
+    const boost::filesystem::path mpkDirectory(conf->val_mpkFilesDir());
+    const boost::filesystem::path docDirectory(conf->val_docFilesDir());
+
+    if ( !boost::filesystem::exists(localRepoDirectory / hexDirectory) ) {
+
+        cout << Constants{}.errorMsgBlank() << "Path \"" << (localRepoDirectory / hexDirectory).string() << "\" not exists!\n";
+        return;
+    }
+
+    if ( !boost::filesystem::exists(localRepoDirectory / mpkDirectory) ) {
+
+        cout << Constants{}.errorMsgBlank() << "Path \"" << (localRepoDirectory / mpkDirectory).string() << "\" not exists!\n";
+        return;
+    }
+
+    if ( !boost::filesystem::exists(localRepoDirectory / docDirectory) ) {
+
+        cout << Constants{}.errorMsgBlank() << "Path \"" << (localRepoDirectory / docDirectory).string() << "\" not exists!\n";
+        return;
+    }
+
+    boost::filesystem::remove_all(remoteRepoDirectory);
+    boost::filesystem::create_directory(remoteRepoDirectory);
+    boost::filesystem::create_directory(remoteRepoDirectory / hexDirectory);
+    boost::filesystem::create_directory(remoteRepoDirectory / mpkDirectory);
+    boost::filesystem::create_directory(remoteRepoDirectory / docDirectory);
+
+    vector<string> filesForCopy;
+
+    findFiles(localRepoDirectory / hexDirectory, ".hex", filesForCopy);
+
+    for ( const auto fileName : filesForCopy ) {
+        boost::filesystem::copy_file(localRepoDirectory / hexDirectory / boost::filesystem::path(fileName),
+                                     remoteRepoDirectory / hexDirectory / boost::filesystem::path(fileName));
+    }
+
+    filesForCopy.clear();
+
+    findFiles(localRepoDirectory / mpkDirectory, ".mpk", filesForCopy);
+
+    for ( const auto fileName : filesForCopy ) {
+        boost::filesystem::copy_file(localRepoDirectory / mpkDirectory / boost::filesystem::path(fileName),
+                                     remoteRepoDirectory / mpkDirectory / boost::filesystem::path(fileName));
+    }
+
+    filesForCopy.clear();
+
+    findFiles(localRepoDirectory / docDirectory, "", filesForCopy);
+
+    for ( const auto fileName : filesForCopy ) {
+        boost::filesystem::copy_file(localRepoDirectory / docDirectory / boost::filesystem::path(fileName),
+                                     remoteRepoDirectory / docDirectory / boost::filesystem::path(fileName));
+    }
+}
+
+void archRepo(const std::unique_ptr<Configuration> &conf) {
+
+    const string localRepoDirectory = conf->val_localRepoDir();
+
+    if ( !boost::filesystem::exists(localRepoDirectory) ) {
+
+        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoDirectory << "\" not exists!\n";
+        return;
+    }
+
+    system((conf->val_archivExec()
+            + " "
+            + conf->val_archivParam()
+            + " "
+            + localRepoDirectory
+            + "_"
+            + boost::lexical_cast<string>(time(NULL))
+            + ".7z "
+            + localRepoDirectory).c_str());
 }

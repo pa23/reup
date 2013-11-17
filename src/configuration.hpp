@@ -44,6 +44,9 @@ public:
     std::string val_mpkFilesDir() const {
         return m_mpkFilesDir;
     }
+    std::string val_docFilesDir() const {
+        return m_docFilesDir;
+    }
     std::string val_trimhexDir() const {
         return m_trimhexDir;
     }
@@ -68,6 +71,7 @@ private:
     std::string m_remoteRepoDir = "";
     std::string m_hexFilesDir   = "hex";
     std::string m_mpkFilesDir   = "mpk";
+    std::string m_docFilesDir   = "doc";
     std::string m_trimhexDir    = "THex";
     std::string m_trimhexExec   = "trimmhex.bat";
     std::string m_archivExec    = "7z";

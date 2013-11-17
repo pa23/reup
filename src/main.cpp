@@ -58,11 +58,14 @@ int main() {
         else if ( currTask == MENU_ADDNEW ) {
             addNewToRepo(conf);
         }
-        else if ( currTask == MENU_ARCHREPO ) {
-            archRepo(conf);
-        }
         else if ( currTask == MENU_CLEANDIR ) {
             cleanDir(conf);
+        }
+        else if ( currTask == MENU_PUBREPO ) {
+            publishRepo(conf);
+        }
+        else if ( currTask == MENU_ARCHREPO ) {
+            archRepo(conf);
         }
         else if ( currTask == MENU_RELOADCONF ) {
             conf->readConfigFile();

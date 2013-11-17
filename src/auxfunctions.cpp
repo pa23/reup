@@ -44,11 +44,26 @@ void findFiles(
     boost::filesystem::directory_iterator dit(rootDir);
     boost::filesystem::directory_iterator enddit;
 
+    bool selectAll = false;
+
+    if ( extension.empty() ) {
+        selectAll = true;
+    }
+
     while ( dit != enddit ) {
 
-        if ( boost::filesystem::is_regular_file(*dit) &&
-             dit->path().extension() == extension ) {
-            fileNames.push_back(dit->path().filename().string());
+        if ( selectAll ) {
+
+            if ( boost::filesystem::is_regular_file(*dit) ) {
+                fileNames.push_back(dit->path().filename().string());
+            }
+        }
+        else {
+
+            if ( boost::filesystem::is_regular_file(*dit) &&
+                 dit->path().extension() == extension ) {
+                fileNames.push_back(dit->path().filename().string());
+            }
         }
 
         ++dit;

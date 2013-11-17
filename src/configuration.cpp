@@ -101,6 +101,9 @@ void Configuration::readConfigFile() {
             else if ( elem[0] == "MPK files directory" ) {
                 m_mpkFilesDir = elem[1];
             }
+            else if ( elem[0] == "DOC files directory" ) {
+                m_docFilesDir = elem[1];
+            }
             else if ( elem[0] == "trimhex directory" ) {
                 m_trimhexDir = elem[1];
             }
@@ -150,6 +153,7 @@ bool Configuration::createBlank() const {
          << "Remote repository directory"  << delimiter << m_remoteRepoDir << "\n"
          << "HEX files directory"          << delimiter << m_hexFilesDir   << "\n"
          << "MPK files directory"          << delimiter << m_mpkFilesDir   << "\n"
+         << "DOC files directory"          << delimiter << m_docFilesDir   << "\n"
          << "trimhex directory"            << delimiter << m_trimhexDir    << "\n"
          << "trimhex executable"           << delimiter << m_trimhexExec   << "\n"
          << "Archivator executable"        << delimiter << m_archivExec    << "\n"
