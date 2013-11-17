@@ -36,7 +36,7 @@ int main() {
          << "Copyright (C) " << Identification{}.copyrightYears() << " " << Identification{}.authors() << "\n\n"
          << "Source code hosting: " << Identification{}.sourceCodeHosting() << "\n"
          << "Author's blog (RU): " << Identification{}.authorsBlog() << "\n\n"
-         << Identification{}.licenseInformation() << "\n";
+         << Identification{}.licenseInformation() << "\n\n";
 
     unique_ptr<Configuration> conf(new Configuration());
     conf->readConfigFile();
