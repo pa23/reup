@@ -287,7 +287,7 @@ void publishRepo(const std::unique_ptr<Configuration> &conf) {
 
     vector<string> filesForCopy;
 
-    findFiles(localRepoDirectory / hexDirectory, ".hex", filesForCopy);
+    findFiles(localRepoDirectory / hexDirectory, "", filesForCopy);
 
     for ( const auto fileName : filesForCopy ) {
         boost::filesystem::copy_file(localRepoDirectory / hexDirectory / boost::filesystem::path(fileName),
@@ -296,7 +296,7 @@ void publishRepo(const std::unique_ptr<Configuration> &conf) {
 
     filesForCopy.clear();
 
-    findFiles(localRepoDirectory / mpkDirectory, ".mpk", filesForCopy);
+    findFiles(localRepoDirectory / mpkDirectory, "", filesForCopy);
 
     for ( const auto fileName : filesForCopy ) {
         boost::filesystem::copy_file(localRepoDirectory / mpkDirectory / boost::filesystem::path(fileName),

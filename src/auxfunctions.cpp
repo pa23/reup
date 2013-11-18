@@ -50,17 +50,21 @@ void findFiles(
         selectAll = true;
     }
 
+    boost::filesystem::file_status fs;
+
     while ( dit != enddit ) {
+
+        fs = boost::filesystem::status(*dit);
 
         if ( selectAll ) {
 
-            if ( boost::filesystem::is_regular_file(*dit) ) {
+            if ( boost::filesystem::is_regular_file(fs) ) {
                 fileNames.push_back(dit->path().filename().string());
             }
         }
         else {
 
-            if ( boost::filesystem::is_regular_file(*dit) &&
+            if ( boost::filesystem::is_regular_file(fs) &&
                  dit->path().extension() == extension ) {
                 fileNames.push_back(dit->path().filename().string());
             }
