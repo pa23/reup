@@ -31,6 +31,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 using std::cout;
 using std::string;
@@ -116,6 +117,12 @@ void Configuration::readConfigFile() {
             else if ( elem[0] == "Archivator parameters" ) {
                 m_archivParam = elem[1];
             }
+            else if ( elem[0] == "k2rei_swver address" ) {
+                m_k2rei_swver_addr = elem[1];
+            }
+            else if ( elem[0] == "k2rei_swver length" ) {
+                m_k2rei_swver_lenght = boost::lexical_cast<size_t>(elem[1]);
+            }
             else if ( elem[0] == "File extensions for deletion" ) {
 
                 ma_fileExtForDel.clear();
@@ -149,15 +156,17 @@ bool Configuration::createBlank() const {
          << "// Text after \"//\" is comment.\n"
          << "//\n\n";
 
-    fout << "Local repository directory"   << delimiter << m_localRepoDir  << "\n"
-         << "Remote repository directory"  << delimiter << m_remoteRepoDir << "\n"
-         << "HEX files directory"          << delimiter << m_hexFilesDir   << "\n"
-         << "MPK files directory"          << delimiter << m_mpkFilesDir   << "\n"
-         << "DOC files directory"          << delimiter << m_docFilesDir   << "\n"
-         << "trimhex directory"            << delimiter << m_trimhexDir    << "\n"
-         << "trimhex executable"           << delimiter << m_trimhexExec   << "\n"
-         << "Archivator executable"        << delimiter << m_archivExec    << "\n"
-         << "Archivator parameters"        << delimiter << m_archivParam   << "\n"
+    fout << "Local repository directory"   << delimiter << m_localRepoDir       << "\n"
+         << "Remote repository directory"  << delimiter << m_remoteRepoDir      << "\n"
+         << "HEX files directory"          << delimiter << m_hexFilesDir        << "\n"
+         << "MPK files directory"          << delimiter << m_mpkFilesDir        << "\n"
+         << "DOC files directory"          << delimiter << m_docFilesDir        << "\n"
+         << "trimhex directory"            << delimiter << m_trimhexDir         << "\n"
+         << "trimhex executable"           << delimiter << m_trimhexExec        << "\n"
+         << "Archivator executable"        << delimiter << m_archivExec         << "\n"
+         << "Archivator parameters"        << delimiter << m_archivParam        << "\n"
+         << "k2rei_swver address"          << delimiter << m_k2rei_swver_addr   << "\n"
+         << "k2rei_swver length"           << delimiter << m_k2rei_swver_lenght << "\n"
          << "File extensions for deletion" << delimiter;
 
     for ( size_t i=0; i<ma_fileExtForDel.size(); i++ ) {

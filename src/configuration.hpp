@@ -59,6 +59,12 @@ public:
     std::string val_archivParam() const {
         return m_archivParam;
     }
+    std::string val_k2rei_swver_addr() const {
+        return m_k2rei_swver_addr;
+    }
+    size_t val_k2rei_swver_lenght() const {
+        return m_k2rei_swver_lenght;
+    }
     std::vector<std::string> val_fileExtToDel() const {
         return ma_fileExtForDel;
     }
@@ -67,15 +73,17 @@ private:
 
     bool createBlank() const;
 
-    std::string m_localRepoDir  = "YMZ-530_ECU_SW_REPO";
-    std::string m_remoteRepoDir = "";
-    std::string m_hexFilesDir   = "hex";
-    std::string m_mpkFilesDir   = "mpk";
-    std::string m_docFilesDir   = "doc";
-    std::string m_trimhexDir    = "THex";
-    std::string m_trimhexExec   = "trimmhex.bat";
-    std::string m_archivExec    = "7z";
-    std::string m_archivParam   = "a";
+    std::string m_localRepoDir     = "YMZ-530_ECU_SW_REPO";
+    std::string m_remoteRepoDir    = "";
+    std::string m_hexFilesDir      = "hex";
+    std::string m_mpkFilesDir      = "mpk";
+    std::string m_docFilesDir      = "doc";
+    std::string m_trimhexDir       = "THex";
+    std::string m_trimhexExec      = "trimmhex.bat";
+    std::string m_archivExec       = "7z";
+    std::string m_archivParam      = "a";
+    std::string m_k2rei_swver_addr = "1E5B8A";
+    size_t m_k2rei_swver_lenght    = 64;
     std::vector<std::string> ma_fileExtForDel =
     {"hex", "7z", "zip", "ini", "txt"};
 

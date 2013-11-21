@@ -34,4 +34,17 @@ void findFiles(
         std::vector<std::string> &       // return
         );
 
+void hexToString(
+        const std::string &,    // source string where symbols is hex ascii codes
+        std::string &           // normal string
+        );
+void stringToHex(
+        const std::string &,    // source normal string
+        std::string &           // string where symbols is hex ascii codes
+        );
+void hexToNum(
+        const std::string &,    // source string where symbols is hex ascii codes
+        std::vector<size_t> &   //
+        );
+
 #endif // AUXFUNCTIONS_HPP

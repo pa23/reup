@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(APP_NAME reup)
-set(APP_VERSION "1.1.2")
+set(APP_VERSION "1.2.0")
 
 project(${APP_NAME})
 
@@ -17,6 +17,7 @@ set(
     src/configuration.hpp
     src/menu.hpp
     src/auxfunctions.hpp
+    src/k2rei_swver.hpp
 )
 
 set(
@@ -25,6 +26,7 @@ set(
     src/configuration.cpp
     src/menu.cpp
     src/auxfunctions.cpp
+    src/k2rei_swver.cpp
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -W -pedantic")

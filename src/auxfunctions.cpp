@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
@@ -29,6 +30,8 @@
 
 using std::string;
 using std::vector;
+using std::stringstream;
+using std::hex;
 
 void findFiles(
         const boost::filesystem::path &rootDir,
@@ -71,5 +74,69 @@ void findFiles(
         }
 
         ++dit;
+    }
+}
+
+void hexToString(const string &srcStr, string &destStr) {
+
+    if ( srcStr.size() < 2 ) {
+        return;
+    }
+
+    destStr.clear();
+
+    stringstream ss;
+    size_t asciiCode = 0;
+
+    for ( size_t i=1; i<srcStr.size(); i+=2 ) {
+
+        ss << hex << srcStr.substr(i-1, 2);
+        ss >> asciiCode;
+
+        if ( asciiCode > 31 && asciiCode < 127 ) {
+            destStr.push_back(static_cast<char>(asciiCode));
+        }
+
+        ss.clear();
+    }
+}
+
+void stringToHex(const string &srcStr, string &destStr) {
+
+    destStr.clear();
+
+    stringstream ss;
+    size_t asciiCode = 0;
+
+    for ( size_t i=0; i<srcStr.size(); i++ ) {
+
+        asciiCode = static_cast<size_t>(srcStr[i]);
+
+        if ( asciiCode > 31 && asciiCode < 127 ) {
+            ss << hex << asciiCode;
+        }
+    }
+
+    ss >> destStr;
+}
+
+void hexToNum(const string &srcStr, vector<size_t> &v) {
+
+    if ( srcStr.size() < 2 ) {
+        return;
+    }
+
+    v.clear();
+
+    stringstream ss;
+    size_t code = 0;
+
+    for ( size_t i=1; i<srcStr.size(); i+=2 ) {
+
+        ss << hex << srcStr.substr(i-1, 2);
+        ss >> code;
+        v.push_back(code);
+
+        ss.clear();
     }
 }

@@ -28,6 +28,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <memory>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
@@ -39,11 +40,13 @@
 using std::cout;
 using std::string;
 using std::vector;
+using std::unique_ptr;
 
 void showMenu() {
 
     cout << "\nMenu:\n"
          << "  " << MENU_TRIMHEX    << ". Trim available hex files\n"
+         << "  " << MENU_UPDHEXID   << ". Update hex identification\n"
          << "  " << MENU_ARCHHEX    << ". Archive trimmed hex files\n"
          << "  " << MENU_ADDNEW     << ". Add new hex and mpk files to repository\n"
          << "  " << MENU_CLEANDIR   << ". Clean trimhex directory\n"
@@ -54,7 +57,7 @@ void showMenu() {
          << "Your select: ";
 }
 
-void trimHex(const std::unique_ptr<Configuration> &conf) {
+void trimHex(const unique_ptr<Configuration> &conf) {
 
     const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
 
@@ -82,7 +85,12 @@ void trimHex(const std::unique_ptr<Configuration> &conf) {
     boost::filesystem::current_path(realProgPath);
 }
 
-void archHex(const std::unique_ptr<Configuration> &conf) {
+void updHexIdent(const unique_ptr<Configuration> &conf) {
+
+    //
+}
+
+void archHex(const unique_ptr<Configuration> &conf) {
 
     const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
 
@@ -113,7 +121,7 @@ void archHex(const std::unique_ptr<Configuration> &conf) {
     boost::filesystem::current_path(realProgPath);
 }
 
-void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
+void addNewToRepo(const unique_ptr<Configuration> &conf) {
 
     const boost::filesystem::path newPath(conf->val_trimhexDir());
 
@@ -214,7 +222,7 @@ void addNewToRepo(const std::unique_ptr<Configuration> &conf) {
     }
 }
 
-void cleanDir(const std::unique_ptr<Configuration> &conf) {
+void cleanDir(const unique_ptr<Configuration> &conf) {
 
     const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
 
@@ -240,7 +248,7 @@ void cleanDir(const std::unique_ptr<Configuration> &conf) {
     boost::filesystem::current_path(realProgPath);
 }
 
-void publishRepo(const std::unique_ptr<Configuration> &conf) {
+void publishRepo(const unique_ptr<Configuration> &conf) {
 
     if ( conf->val_remoteRepoDir().empty() ) {
 
@@ -313,7 +321,7 @@ void publishRepo(const std::unique_ptr<Configuration> &conf) {
     }
 }
 
-void archRepo(const std::unique_ptr<Configuration> &conf) {
+void archRepo(const unique_ptr<Configuration> &conf) {
 
     const string localRepoDirectory = conf->val_localRepoDir();
 

@@ -52,6 +52,9 @@ int main() {
         if ( currTask == MENU_TRIMHEX ) {
             trimHex(conf);
         }
+        else if ( currTask == MENU_UPDHEXID ) {
+            updHexIdent(conf);
+        }
         else if ( currTask == MENU_ARCHHEX ) {
             archHex(conf);
         }

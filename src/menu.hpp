@@ -29,6 +29,7 @@ enum {
 
     MENU_EXIT,
     MENU_TRIMHEX,
+    MENU_UPDHEXID,
     MENU_ARCHHEX,
     MENU_ADDNEW,
     MENU_CLEANDIR,
@@ -40,6 +41,7 @@ enum {
 void showMenu();
 
 void trimHex(const std::unique_ptr<Configuration> &);
+void updHexIdent(const std::unique_ptr<Configuration> &);
 void archHex(const std::unique_ptr<Configuration> &);
 void addNewToRepo(const std::unique_ptr<Configuration> &);
 void cleanDir(const std::unique_ptr<Configuration> &);
