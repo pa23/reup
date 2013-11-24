@@ -28,23 +28,16 @@
 
 #include <boost/filesystem.hpp>
 
-void findFiles(
+std::vector<std::string> findFiles(
         const boost::filesystem::path &, // path
-        const std::string &,             // file extension
-        std::vector<std::string> &       // return
+        const std::string &              // file extension
         );
 
-void hexToString(
-        const std::string &,    // source string where symbols is hex ascii codes
-        std::string &           // normal string
-        );
-void stringToHex(
-        const std::string &,    // source normal string
-        std::string &           // string where symbols is hex ascii codes
-        );
-void hexToNum(
-        const std::string &,    // source string where symbols is hex ascii codes
-        std::vector<size_t> &   //
-        );
+std::string hexToString(const std::string &);
+std::string stringToHex(const std::string &);
+
+std::vector<size_t> hexToNumBS(const std::string &);
+size_t hexToNum(const std::string &);
+std::string numToHex(size_t);
 
 #endif // AUXFUNCTIONS_HPP

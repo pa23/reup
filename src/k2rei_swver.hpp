@@ -40,12 +40,14 @@ private:
 
     std::string m_hexFilePath;
     std::string m_address;
-    size_t m_length = 0;
+    size_t m_dataLength = 0;
 
-    std::vector<std::string> hexData;      // readHex()
+    std::vector<std::string> ma_hexData;   // readHex()
     size_t m_addrExtStrNum = 0;            // findAddrExt()
-    size_t m_firstStrNum = 0;              // findData()
+    size_t m_beginStrNum = 0;              // findData()
+    size_t m_endStrNum = 0;
     size_t m_firstByteInd = 0;
+    size_t m_endByteInd = 0;
     std::string m_data;                    // readData()
 
     //

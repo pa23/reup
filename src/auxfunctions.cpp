@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
@@ -33,15 +34,16 @@ using std::vector;
 using std::stringstream;
 using std::hex;
 
-void findFiles(
+vector<string> findFiles(
         const boost::filesystem::path &rootDir,
-        const string &extension,
-        vector<string> &fileNames
+        const string &extension
         ) {
+
+    vector<string> fileNames;
 
     if ( !boost::filesystem::exists(rootDir) ||
          !boost::filesystem::is_directory(rootDir) ) {
-        return;
+        return fileNames;
     }
 
     boost::filesystem::directory_iterator dit(rootDir);
@@ -75,58 +77,64 @@ void findFiles(
 
         ++dit;
     }
+
+    return fileNames;
 }
 
-void hexToString(const string &srcStr, string &destStr) {
+string hexToString(const string &srcStr) {
+
+    string destStr;
 
     if ( srcStr.size() < 2 ) {
-        return;
+        return destStr;
     }
 
-    destStr.clear();
-
     stringstream ss;
-    size_t asciiCode = 0;
+    size_t code = 0;
 
     for ( size_t i=1; i<srcStr.size(); i+=2 ) {
 
         ss << hex << srcStr.substr(i-1, 2);
-        ss >> asciiCode;
+        ss >> code;
 
-        if ( asciiCode > 31 && asciiCode < 127 ) {
-            destStr.push_back(static_cast<char>(asciiCode));
+        if ( code > 31 && code < 127 ) {
+            destStr.push_back(static_cast<char>(code));
         }
 
         ss.clear();
     }
+
+    return destStr;
 }
 
-void stringToHex(const string &srcStr, string &destStr) {
+string stringToHex(const string &srcStr) {
 
-    destStr.clear();
-
+    string destStr;
     stringstream ss;
-    size_t asciiCode = 0;
+    size_t code = 0;
 
     for ( size_t i=0; i<srcStr.size(); i++ ) {
 
-        asciiCode = static_cast<size_t>(srcStr[i]);
+        code = static_cast<size_t>(srcStr[i]);
 
-        if ( asciiCode > 31 && asciiCode < 127 ) {
-            ss << hex << asciiCode;
+        if ( code > 31 && code < 127 ) {
+            ss << hex << code;
         }
     }
 
     ss >> destStr;
+    transform(destStr.begin(), destStr.end(), destStr.begin(), ::toupper);
+
+    return destStr;
 }
 
-void hexToNum(const string &srcStr, vector<size_t> &v) {
+vector<size_t> hexToNumBS(const string &srcStr) {
+
+    vector<size_t> v;
 
     if ( srcStr.size() < 2 ) {
-        return;
+        return v;
     }
-
-    v.clear();
 
     stringstream ss;
     size_t code = 0;
@@ -139,4 +147,29 @@ void hexToNum(const string &srcStr, vector<size_t> &v) {
 
         ss.clear();
     }
+
+    return v;
+}
+
+size_t hexToNum(const string &str) {
+
+    size_t num = 0;
+    stringstream ss;
+
+    ss << hex << str;
+    ss >> num;
+
+    return num;
+}
+
+string numToHex(size_t num) {
+
+    string str;
+    stringstream ss;
+
+    ss << hex << num;
+    ss >> str;
+    transform(str.begin(), str.end(), str.begin(), ::toupper);
+
+    return str;
 }

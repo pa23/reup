@@ -29,6 +29,7 @@
 #include <sstream>
 
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 
 using std::string;
 using std::vector;
@@ -43,7 +44,7 @@ k2rei_swver::k2rei_swver(const std::string &hexP,
                          size_t l) {
     m_hexFilePath = hexP;
     m_address = addr;
-    m_length = l;
+    m_dataLength = l;
 }
 
 string k2rei_swver::fromHex() {
@@ -84,7 +85,7 @@ bool k2rei_swver::readHex() {
         getline(fin, s);
 
         if ( !s.empty() ) {
-            hexData.push_back(s);
+            ma_hexData.push_back(s);
         }
 
         s.clear();
@@ -97,9 +98,7 @@ bool k2rei_swver::readHex() {
 
 string k2rei_swver::checksum(const string &str) const {
 
-    vector<size_t> v;
-    hexToNum(str, v);
-
+    vector<size_t> v = hexToNumBS(str);
     char cs = 0;
 
     for ( size_t i=0; i<v.size(); i++ ) {
@@ -127,9 +126,9 @@ void k2rei_swver::findAddrExt() {
     string str = "0200000400" + m_address.substr(0, 2);
     string addrext = ":" + str + checksum(str);
 
-    for ( size_t i=0; i<hexData.size(); i++ ) {
+    for ( size_t i=0; i<ma_hexData.size(); i++ ) {
 
-        if ( hexData[i] == addrext ) {
+        if ( ma_hexData[i] == addrext ) {
             m_addrExtStrNum = i;
             break;
         }
@@ -138,7 +137,25 @@ void k2rei_swver::findAddrExt() {
 
 bool k2rei_swver::findData() {
 
-    //
+    vector<size_t> v = hexToNumBS(ma_hexData[m_addrExtStrNum]);
+
+    if ( v.empty() ) {
+        return false;
+    }
+
+    short strtAddr = hexToNum(m_address) & (0xFFFF - v[0] + 1);
+
+    boost::regex regexp = R"(^:)" + numToHex(v[0]) + numToHex(strtAddr) + R"(00.*)";
+
+    for ( size_t i=m_addrExtStrNum; i<ma_hexData.size(); i++ ) {
+
+        if ( boost::regex_match(ma_hexData[i], regexp) ) {
+            m_beginStrNum = i;
+            break;
+        }
+    }
+
+    ////
 
     return true;
 }

@@ -67,9 +67,7 @@ void trimHex(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    vector<string> fileNames;
-
-    findFiles(trimhexDir, ".hex", fileNames);
+    vector<string> fileNames = findFiles(trimhexDir, ".hex");
 
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(trimhexDir);
@@ -100,9 +98,7 @@ void archHex(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    vector<string> fileNames;
-
-    findFiles(trimhexDir, ".hex", fileNames);
+    vector<string> fileNames = findFiles(trimhexDir, ".hex");
 
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(trimhexDir);
@@ -141,11 +137,8 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    vector<string> newFileNames;
-    findFiles(newPath, ".hex", newFileNames);
-
-    vector<string> localRepoFileNames;
-    findFiles(localRepoHexPath, ".hex", localRepoFileNames);
+    vector<string> newFileNames = findFiles(newPath, ".hex");
+    vector<string> localRepoFileNames = findFiles(localRepoHexPath, ".hex");
 
     vector<string> parts;
     boost::regex regexp;
@@ -178,9 +171,6 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
                     );
     }
 
-    newFileNames.clear();
-    localRepoFileNames.clear();
-
     const boost::filesystem::path mpkFilesDir(conf->val_mpkFilesDir());
     const boost::filesystem::path localRepoMpkPath = localRepoDir / mpkFilesDir;
 
@@ -190,8 +180,8 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    findFiles(newPath, ".zip", newFileNames);
-    findFiles(localRepoMpkPath, ".zip", localRepoFileNames);
+    newFileNames = findFiles(newPath, ".zip");
+    localRepoFileNames = findFiles(localRepoMpkPath, ".zip");
 
     for ( const auto newFileName : newFileNames ) {
 
@@ -235,7 +225,7 @@ void cleanDir(const unique_ptr<Configuration> &conf) {
     vector<string> fileNames;
 
     for ( const auto ext : conf->val_fileExtToDel() ) {
-        findFiles(trimhexDir, "."+ext, fileNames);
+        fileNames = findFiles(trimhexDir, "."+ext);
     }
 
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
@@ -293,27 +283,21 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
     boost::filesystem::create_directory(remoteRepoDirectory / mpkDirectory);
     boost::filesystem::create_directory(remoteRepoDirectory / docDirectory);
 
-    vector<string> filesForCopy;
-
-    findFiles(localRepoDirectory / hexDirectory, "", filesForCopy);
+    vector<string> filesForCopy = findFiles(localRepoDirectory / hexDirectory, "");
 
     for ( const auto fileName : filesForCopy ) {
         boost::filesystem::copy_file(localRepoDirectory / hexDirectory / boost::filesystem::path(fileName),
                                      remoteRepoDirectory / hexDirectory / boost::filesystem::path(fileName));
     }
 
-    filesForCopy.clear();
-
-    findFiles(localRepoDirectory / mpkDirectory, "", filesForCopy);
+    filesForCopy = findFiles(localRepoDirectory / mpkDirectory, "");
 
     for ( const auto fileName : filesForCopy ) {
         boost::filesystem::copy_file(localRepoDirectory / mpkDirectory / boost::filesystem::path(fileName),
                                      remoteRepoDirectory / mpkDirectory / boost::filesystem::path(fileName));
     }
 
-    filesForCopy.clear();
-
-    findFiles(localRepoDirectory / docDirectory, "", filesForCopy);
+    filesForCopy = findFiles(localRepoDirectory / docDirectory, "");
 
     for ( const auto fileName : filesForCopy ) {
         boost::filesystem::copy_file(localRepoDirectory / docDirectory / boost::filesystem::path(fileName),
