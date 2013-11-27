@@ -39,24 +39,33 @@ using std::ofstream;
 using std::stringstream;
 using std::hex;
 
-k2rei_swver::k2rei_swver(const std::string &hexP,
-                         const std::string &addr,
-                         size_t l) {
+k2rei_swver::k2rei_swver() {
+}
+
+void k2rei_swver::init(const string &hexP, const string &addr, size_t l) {
+
     m_hexFilePath = hexP;
     m_address = addr;
     m_dataLength = l;
+
+    ma_hexData.clear();
+    m_addrExtStrNum = 0;
+    m_beginStrNum = 0;
+    m_correctStrDataSize = 0;
+    m_firstByteInd = 0;
+    m_data.clear();
 }
 
-string k2rei_swver::fromHex() {
+bool k2rei_swver::read() {
 
-    string str;
+    if ( !readHex() || !findAddrExt() || !findData() || !readData() ) {
+        return false;
+    }
 
-    //
-
-    return str;
+    return true;
 }
 
-bool k2rei_swver::toHex(const std::string &str) {
+bool k2rei_swver::write(const string &str) {
 
     //
 
@@ -79,6 +88,7 @@ bool k2rei_swver::readHex() {
     }
 
     string s;
+    ma_hexData.clear();
 
     while ( !fin.eof() ) {
 
@@ -145,7 +155,7 @@ bool k2rei_swver::findData() {
 
     short strtAddr = hexToNum(m_address) & (0xFFFF - v[0] + 1);
 
-    boost::regex regexp = R"(^:)" + numToHex(v[0]) + numToHex(strtAddr) + R"(00.*)";
+    boost::regex regexp(R"(^:)" + numToHex(v[0]) + numToHex(strtAddr) + R"(00.*)");
 
     for ( size_t i=m_addrExtStrNum; i<ma_hexData.size(); i++ ) {
 
@@ -155,14 +165,52 @@ bool k2rei_swver::findData() {
         }
     }
 
-    ////
+    m_correctStrDataSize = 8 + v[0] * 2 + 2;
+
+    if ( ma_hexData[m_beginStrNum].size() != m_correctStrDataSize ) {
+        return false;
+    }
+
+    m_firstByteInd = hexToNum(m_address.substr(m_address.size()-1, 1)) + 3 + 1;
 
     return true;
 }
 
 bool k2rei_swver::readData() {
 
-    //
+    string str;
+    m_data.clear();
+
+    for ( size_t j=m_firstByteInd; j<(ma_hexData[m_beginStrNum].size()-2); j++ ) {
+
+        if ( str.size() == m_dataLength ) {
+
+            m_data = hexToString(str);
+            return true;
+        }
+        else {
+            str.push_back(ma_hexData[m_beginStrNum][j]);
+        }
+    }
+
+    for ( size_t i=(m_beginStrNum+1); i<ma_hexData.size(); i++ ) {
+
+        if ( ma_hexData[i].size() != m_correctStrDataSize ) {
+            return false;
+        }
+
+        for ( size_t j=8; j<(m_correctStrDataSize-2); j++ ) {
+
+            if ( str.size() == m_dataLength ) {
+
+                m_data = hexToString(str);
+                return true;
+            }
+            else {
+                str.push_back(ma_hexData[i][j]);
+            }
+        }
+    }
 
     return true;
 }

@@ -23,6 +23,7 @@
 #include "configuration.hpp"
 #include "auxfunctions.hpp"
 #include "constants.hpp"
+#include "k2rei_swver.hpp"
 
 #include <iostream>
 #include <string>
@@ -85,7 +86,22 @@ void trimHex(const unique_ptr<Configuration> &conf) {
 
 void updHexIdent(const unique_ptr<Configuration> &conf) {
 
-    //
+    const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
+
+    if ( !boost::filesystem::exists(trimhexDir) ) {
+
+        cout << Constants{}.errorMsgBlank() << "Path \"" << trimhexDir.string() << "\" not exists!\n";
+        return;
+    }
+
+    vector<string> fileNames = findFiles(trimhexDir, ".hex");
+
+    unique_ptr<k2rei_swver> hexswver(new k2rei_swver());
+
+    for ( auto elem : fileNames ) {
+
+        //hexswver->init();
+    }
 }
 
 void archHex(const unique_ptr<Configuration> &conf) {
