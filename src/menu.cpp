@@ -100,7 +100,17 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
 
     for ( auto elem : fileNames ) {
 
-        //hexswver->init();
+        hexswver->init(
+                    (trimhexDir / boost::filesystem::path(elem)).string(),
+                    conf->val_k2rei_swver_addr(),
+                    conf-> val_k2rei_swver_lenght()
+                    );
+
+        if ( !hexswver->read() ) {
+            cout << Constants{}.errorMsgBlank() << "Errors during k2rei_swver parameter reading in " << elem << ".\n";
+        }
+
+        cout << hexswver->val() << "\n";
     }
 }
 

@@ -58,7 +58,23 @@ void k2rei_swver::init(const string &hexP, const string &addr, size_t l) {
 
 bool k2rei_swver::read() {
 
-    if ( !readHex() || !findAddrExt() || !findData() || !readData() ) {
+    if ( !readHex() ) {
+
+        cout << Constants{}.errorMsgBlank() << "Errors during hex file reading.\n";
+        return false;
+    }
+
+    findAddrExt();
+
+    if ( !findData() ) {
+
+        cout << Constants{}.errorMsgBlank() << "Errors during finding data in hex file.\n";
+        return false;
+    }
+
+    if ( !readData() ) {
+
+        cout << Constants{}.errorMsgBlank() << "Errors during k2rei_swver data reading.\n";
         return false;
     }
 
@@ -87,18 +103,23 @@ bool k2rei_swver::readHex() {
         return false;
     }
 
-    string s;
     ma_hexData.clear();
 
     while ( !fin.eof() ) {
 
+        string s;
         getline(fin, s);
 
         if ( !s.empty() ) {
+
+            s = s.substr(1, s.size()-1);
+
+            stringstream ss;
+            ss << s;
+            ss >> s;
+
             ma_hexData.push_back(s);
         }
-
-        s.clear();
     }
 
     fin.close();
@@ -121,7 +142,10 @@ string k2rei_swver::checksum(const string &str) const {
     string ret;
     ss >> ret;
 
-    return ret.substr(14, 2);
+    ret = ret.substr(14, 2);
+    transform(ret.begin(), ret.end(), ret.begin(), ::toupper);
+
+    return ret;
 }
 
 bool k2rei_swver::writeHex() {
@@ -133,12 +157,11 @@ bool k2rei_swver::writeHex() {
 
 void k2rei_swver::findAddrExt() {
 
-    string str = "0200000400" + m_address.substr(0, 2);
-    string addrext = ":" + str + checksum(str);
+    const boost::regex regexp(R"(.*)" + string("0200000400") + m_address.substr(0, 2) + R"(.*)");
 
     for ( size_t i=0; i<ma_hexData.size(); i++ ) {
 
-        if ( ma_hexData[i] == addrext ) {
+        if ( boost::regex_match(ma_hexData[i], regexp) ) {
             m_addrExtStrNum = i;
             break;
         }
@@ -147,17 +170,17 @@ void k2rei_swver::findAddrExt() {
 
 bool k2rei_swver::findData() {
 
-    vector<size_t> v = hexToNumBS(ma_hexData[m_addrExtStrNum]);
+    vector<size_t> v = hexToNumBS(ma_hexData[m_addrExtStrNum+1]);
 
     if ( v.empty() ) {
         return false;
     }
 
-    short strtAddr = hexToNum(m_address) & (0xFFFF - v[0] + 1);
+    const short strtAddr = hexToNum(m_address) & (0xFFFF - v[0] + 1);
 
-    boost::regex regexp(R"(^:)" + numToHex(v[0]) + numToHex(strtAddr) + R"(00.*)");
+    const boost::regex regexp(R"(^)" + numToHex(v[0]) + numToHex(strtAddr) + R"(00.*)");
 
-    for ( size_t i=m_addrExtStrNum; i<ma_hexData.size(); i++ ) {
+    for ( size_t i=m_addrExtStrNum+1; i<ma_hexData.size(); i++ ) {
 
         if ( boost::regex_match(ma_hexData[i], regexp) ) {
             m_beginStrNum = i;
@@ -171,7 +194,7 @@ bool k2rei_swver::findData() {
         return false;
     }
 
-    m_firstByteInd = hexToNum(m_address.substr(m_address.size()-1, 1)) + 3 + 1;
+    m_firstByteInd = 8 + hexToNum(m_address.substr(m_address.size()-1, 1)) * 2;
 
     return true;
 }
@@ -180,10 +203,11 @@ bool k2rei_swver::readData() {
 
     string str;
     m_data.clear();
+    size_t maxsize = m_dataLength * 2;
 
     for ( size_t j=m_firstByteInd; j<(ma_hexData[m_beginStrNum].size()-2); j++ ) {
 
-        if ( str.size() == m_dataLength ) {
+        if ( str.size() == maxsize ) {
 
             m_data = hexToString(str);
             return true;
@@ -201,7 +225,7 @@ bool k2rei_swver::readData() {
 
         for ( size_t j=8; j<(m_correctStrDataSize-2); j++ ) {
 
-            if ( str.size() == m_dataLength ) {
+            if ( str.size() == maxsize ) {
 
                 m_data = hexToString(str);
                 return true;
