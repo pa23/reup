@@ -96,22 +96,32 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
 
     vector<string> fileNames = findFiles(trimhexDir, ".hex");
 
+    const boost::filesystem::path realProgPath = boost::filesystem::current_path();
+    boost::filesystem::current_path(trimhexDir);
+
     unique_ptr<k2rei_swver> hexswver(new k2rei_swver());
 
     for ( auto elem : fileNames ) {
 
-        hexswver->init(
-                    (trimhexDir / boost::filesystem::path(elem)).string(),
-                    conf->val_k2rei_swver_addr(),
-                    conf-> val_k2rei_swver_lenght()
-                    );
+        hexswver->init(elem, conf->val_k2rei_swver_addr(), conf-> val_k2rei_swver_lenght());
 
         if ( !hexswver->read() ) {
             cout << Constants{}.errorMsgBlank() << "Errors during k2rei_swver parameter reading in " << elem << ".\n";
         }
+        else {
+            cout << Constants{}.msgBlank() << "Readed hex ID: " << hexswver->val() << "\n";
+        }
 
-        cout << hexswver->val() << "\n";
+        if ( !hexswver->write(elem) ) {
+            cout << Constants{}.errorMsgBlank() << "Errors during k2rei_swver parameter writing in " << elem << ".\n";
+        }
+        else {
+//            system((conf->val_trimhexExec() + " " + elem).c_str());
+            cout << Constants{}.msgBlank() << "Written hex ID: " << elem << "\n";
+        }
     }
+
+    boost::filesystem::current_path(realProgPath);
 }
 
 void archHex(const unique_ptr<Configuration> &conf) {

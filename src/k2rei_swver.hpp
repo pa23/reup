@@ -40,7 +40,7 @@ public:
     bool write(const std::string &);
 
     std::string val() const {
-        return m_data;
+        return m_readedData;
     }
 
 private:
@@ -51,19 +51,22 @@ private:
 
     std::vector<std::string> ma_hexData;   // readHex()
     size_t m_addrExtStrNum = 0;            // findAddrExt()
-    size_t m_beginStrNum = 0;              // findData()
+    size_t m_strDataLength = 0;            // findData()
+    size_t m_beginStrNum = 0;
     size_t m_correctStrDataSize = 0;
     size_t m_firstByteInd = 0;
-    std::string m_data;                    // readData()
+    std::string m_readedData;              // readData()
+    std::string m_dataForWrite;
 
     //
 
     bool readHex();
     std::string checksum(const std::string &) const;
-    bool writeHex();
     void findAddrExt();
     bool findData();
     bool readData();
+    bool writeData(const std::string &);
+    bool writeHex() const;
 
 };
 
