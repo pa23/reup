@@ -116,7 +116,7 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
             cout << Constants{}.errorMsgBlank() << "Errors during k2rei_swver parameter writing in " << elem << ".\n";
         }
         else {
-//            system((conf->val_trimhexExec() + " " + elem).c_str());
+            system((conf->val_trimhexExec() + " " + elem).c_str());
             cout << Constants{}.msgBlank() << "Written hex ID: " << elem << "\n";
         }
     }

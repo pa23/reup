@@ -185,11 +185,11 @@ bool k2rei_swver::findData() {
         return false;
     }
 
-    m_strDataLength = v[0];
+    size_t strDataLength = v[0];
 
-    const short strtAddr = hexToNum(m_address) & (0xFFFF - m_strDataLength + 1);
+    const short strtAddr = hexToNum(m_address) & (0xFFFF - strDataLength + 1);
 
-    const boost::regex regexp(R"(^)" + numToHex(m_strDataLength) + numToHex(strtAddr) + R"(00.*)");
+    const boost::regex regexp(R"(^)" + numToHex(strDataLength) + numToHex(strtAddr) + R"(00.*)");
 
     for ( size_t i=m_addrExtStrNum+1; i<ma_hexData.size(); i++ ) {
 
@@ -199,7 +199,7 @@ bool k2rei_swver::findData() {
         }
     }
 
-    m_correctStrDataSize = 8 + m_strDataLength * 2 + 2;
+    m_correctStrDataSize = 8 + strDataLength * 2 + 2;
 
     if ( ma_hexData[m_beginStrNum].size() != m_correctStrDataSize ) {
         return false;
@@ -256,17 +256,17 @@ bool k2rei_swver::writeData(const string &str) {
         return false;
     }
 
-    m_dataForWrite = stringToHex(str);
+    string dataForWrite = stringToHex(str);
 
     size_t maxsize = m_dataLength * 2;
 
-    if ( m_dataForWrite.size() > maxsize ) {
+    if ( dataForWrite.size() > maxsize ) {
         return false;
     }
-    else if ( m_dataForWrite.size() < maxsize ) {
+    else if ( dataForWrite.size() < maxsize ) {
 
-        for ( size_t i=m_dataForWrite.size(); i<maxsize; i++ ) {
-            m_dataForWrite.push_back('0');
+        for ( size_t i=dataForWrite.size(); i<maxsize; i++ ) {
+            dataForWrite.push_back('0');
         }
     }
 
@@ -274,18 +274,18 @@ bool k2rei_swver::writeData(const string &str) {
 
     for ( size_t j=m_firstByteInd; j<(ma_hexData[m_beginStrNum].size()-2); j++ ) {
 
-        if ( pos == m_dataForWrite.size()-1 ) {
+        if ( pos == dataForWrite.size()-1 ) {
             break;
         }
 
-        ma_hexData[m_beginStrNum][j] = m_dataForWrite[pos];
+        ma_hexData[m_beginStrNum][j] = dataForWrite[pos];
         pos++;
     }
 
     string strwoCS = ma_hexData[m_beginStrNum].substr(0, m_correctStrDataSize-2);
     ma_hexData[m_beginStrNum] = strwoCS + checksum(strwoCS);
 
-    if ( pos == m_dataForWrite.size()-1 ) {
+    if ( pos == dataForWrite.size()-1 ) {
         return true;
     }
 
@@ -299,13 +299,13 @@ bool k2rei_swver::writeData(const string &str) {
 
         for ( size_t j=8; j<(m_correctStrDataSize-2); j++ ) {
 
-            if ( pos == m_dataForWrite.size()-1 ) {
+            if ( pos == dataForWrite.size()-1 ) {
 
                 stop = true;
                 break;
             }
 
-            ma_hexData[i][j] = m_dataForWrite[pos];
+            ma_hexData[i][j] = dataForWrite[pos];
             pos++;
         }
 
