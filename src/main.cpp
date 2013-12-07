@@ -24,10 +24,49 @@
 #include "configuration.hpp"
 #include "identification.hpp"
 #include "menu.hpp"
+#include "constants.hpp"
 
 using std::unique_ptr;
 using std::cout;
 using std::cin;
+
+void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
+
+    if ( currTask == MENU_TRIMHEX ) {
+        cout << Constants{}.msgBlank() << "Trimming available hex files...\n";
+        trimHex(conf);
+    }
+    else if ( currTask == MENU_UPDHEXID ) {
+        cout << Constants{}.msgBlank() << "Updating hex files identification...\n";
+        updHexIdent(conf);
+    }
+    else if ( currTask == MENU_ARCHHEX ) {
+        cout << Constants{}.msgBlank() << "Archiving hex files...\n";
+        archHex(conf);
+    }
+    else if ( currTask == MENU_ADDNEW ) {
+        cout << Constants{}.msgBlank() << "Adding new files to repository...\n";
+        addNewToRepo(conf);
+    }
+    else if ( currTask == MENU_CLEANDIR ) {
+        cout << Constants{}.msgBlank() << "Cleaning trimhex directory...\n";
+        cleanDir(conf);
+    }
+    else if ( currTask == MENU_PUBREPO ) {
+        cout << Constants{}.msgBlank() << "Publishing repository...\n";
+        publishRepo(conf);
+    }
+    else if ( currTask == MENU_ARCHREPO ) {
+        cout << Constants{}.msgBlank() << "Archiving repository...\n";
+        archRepo(conf);
+    }
+    else if ( currTask == MENU_RELOADCONF ) {
+        cout << Constants{}.msgBlank() << "Reloading program configuration...\n";
+        conf->readConfigFile();
+    }
+
+    cout << Constants{}.msgBlank() << "Done.\n";
+}
 
 int main() {
 
@@ -41,44 +80,18 @@ int main() {
     unique_ptr<Configuration> conf(new Configuration());
     conf->readConfigFile();
 
-    bool work = true;
     size_t currTask = MENU_EXIT;
 
-    while ( work ) {
+    showMenu();
 
-        showMenu();
+    while ( cin >> currTask ) {
 
-        cin >> currTask;
-
-        if ( currTask == MENU_TRIMHEX ) {
-            trimHex(conf);
-        }
-        else if ( currTask == MENU_UPDHEXID ) {
-            updHexIdent(conf);
-        }
-        else if ( currTask == MENU_ARCHHEX ) {
-            archHex(conf);
-        }
-        else if ( currTask == MENU_ADDNEW ) {
-            addNewToRepo(conf);
-        }
-        else if ( currTask == MENU_CLEANDIR ) {
-            cleanDir(conf);
-        }
-        else if ( currTask == MENU_PUBREPO ) {
-            publishRepo(conf);
-        }
-        else if ( currTask == MENU_ARCHREPO ) {
-            archRepo(conf);
-        }
-        else if ( currTask == MENU_RELOADCONF ) {
-            conf->readConfigFile();
-        }
-        else if ( currTask == MENU_EXIT ) {
-            work = false;
+        if ( currTask > 0 ) {
+            execTask(conf, currTask);
         }
         else {
-            work = false;
+            cout << Constants{}.msgBlank() << "Bye!\n";
+            break;
         }
     }
 
