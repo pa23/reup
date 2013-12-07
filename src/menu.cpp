@@ -73,7 +73,7 @@ void trimHex(const unique_ptr<Configuration> &conf) {
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(trimhexDir);
 
-    for ( const auto fileName : fileNames ) {
+    for ( const string fileName : fileNames ) {
 
         if ( boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) {
 
@@ -101,7 +101,7 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
 
     unique_ptr<k2rei_swver> hexswver(new k2rei_swver());
 
-    for ( auto elem : fileNames ) {
+    for ( const string elem : fileNames ) {
 
         hexswver->init(elem, conf->val_k2rei_swver_addr(), conf-> val_k2rei_swver_lenght());
 
@@ -139,7 +139,7 @@ void archHex(const unique_ptr<Configuration> &conf) {
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(trimhexDir);
 
-    for ( const auto fileName : fileNames ) {
+    for ( const string fileName : fileNames ) {
 
         if ( boost::filesystem::exists(boost::filesystem::path(fileName+".7z")) ||
              boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) {
@@ -179,7 +179,7 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
     vector<string> parts;
     boost::regex regexp;
 
-    for ( const auto newFileName : newFileNames ) {
+    for ( const string newFileName : newFileNames ) {
 
         boost::split(parts, newFileName, boost::is_any_of("_"));
 
@@ -189,7 +189,7 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
             continue;
         }
 
-        for ( const auto localRepoFileName : localRepoFileNames ) {
+        for ( const string localRepoFileName : localRepoFileNames ) {
 
             regexp = R"(.*)" + parts[2] + R"(_+.*(\.hex){1}$)";
 
@@ -219,7 +219,7 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
     newFileNames = findFiles(newPath, ".zip");
     localRepoFileNames = findFiles(localRepoMpkPath, ".zip");
 
-    for ( const auto newFileName : newFileNames ) {
+    for ( const string newFileName : newFileNames ) {
 
         boost::split(parts, newFileName, boost::is_any_of("_"));
 
@@ -229,7 +229,7 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
             continue;
         }
 
-        for ( const auto localRepoFileName : localRepoFileNames ) {
+        for ( const string localRepoFileName : localRepoFileNames ) {
 
             regexp = R"(.*)" + parts[2] + R"(_+.*(\.zip){1}$)";
 
@@ -259,15 +259,18 @@ void cleanDir(const unique_ptr<Configuration> &conf) {
     }
 
     vector<string> fileNames;
+    vector<string> tmp;
 
-    for ( const auto ext : conf->val_fileExtToDel() ) {
-        fileNames = findFiles(trimhexDir, "."+ext);
+    for ( const string ext : conf->val_fileExtToDel() ) {
+
+        tmp = findFiles(trimhexDir, ext);
+        fileNames.insert(fileNames.end(), tmp.begin(), tmp.end());
     }
 
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(trimhexDir);
 
-    for ( const auto fileName : fileNames ) {
+    for ( const string fileName : fileNames ) {
         boost::filesystem::remove(boost::filesystem::path(fileName));
     }
 
@@ -321,21 +324,21 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     vector<string> filesForCopy = findFiles(localRepoDirectory / hexDirectory, "");
 
-    for ( const auto fileName : filesForCopy ) {
+    for ( const string fileName : filesForCopy ) {
         boost::filesystem::copy_file(localRepoDirectory / hexDirectory / boost::filesystem::path(fileName),
                                      remoteRepoDirectory / hexDirectory / boost::filesystem::path(fileName));
     }
 
     filesForCopy = findFiles(localRepoDirectory / mpkDirectory, "");
 
-    for ( const auto fileName : filesForCopy ) {
+    for ( const string fileName : filesForCopy ) {
         boost::filesystem::copy_file(localRepoDirectory / mpkDirectory / boost::filesystem::path(fileName),
                                      remoteRepoDirectory / mpkDirectory / boost::filesystem::path(fileName));
     }
 
     filesForCopy = findFiles(localRepoDirectory / docDirectory, "");
 
-    for ( const auto fileName : filesForCopy ) {
+    for ( const string fileName : filesForCopy ) {
         boost::filesystem::copy_file(localRepoDirectory / docDirectory / boost::filesystem::path(fileName),
                                      remoteRepoDirectory / docDirectory / boost::filesystem::path(fileName));
     }

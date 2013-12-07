@@ -329,7 +329,7 @@ bool k2rei_swver::writeHex() const {
         return false;
     }
 
-    for ( auto elem : ma_hexData ) {
+    for ( const string elem : ma_hexData ) {
         fout << ":" << elem << "\r\n";
     }
 

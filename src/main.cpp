@@ -47,6 +47,7 @@ int main() {
     while ( work ) {
 
         showMenu();
+
         cin >> currTask;
 
         if ( currTask == MENU_TRIMHEX ) {

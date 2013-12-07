@@ -56,8 +56,6 @@ private:
     size_t m_firstByteInd = 0;
     std::string m_readedData;              // readData()
 
-    //
-
     bool readHex();
     std::string checksum(const std::string &) const;
     void findAddrExt();

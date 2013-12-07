@@ -85,7 +85,7 @@ private:
     std::string m_k2rei_swver_addr = "1E5B8A";
     size_t m_k2rei_swver_lenght    = 64;
     std::vector<std::string> ma_fileExtForDel =
-    {"hex", "7z", "zip", "ini", "txt"};
+    {".hex", ".7z", ".zip", ".ini", ".txt"};
 
 };
 
