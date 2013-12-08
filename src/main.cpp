@@ -20,15 +20,38 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "configuration.hpp"
 #include "identification.hpp"
 #include "menu.hpp"
 #include "constants.hpp"
 
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
+
 using std::unique_ptr;
 using std::cout;
 using std::cin;
+using std::string;
+using std::vector;
+
+string taskFilter(const string &str) {
+
+    string ret;
+
+    for ( size_t i=0; i<str.size(); i++ ) {
+
+        char ch = str[i];
+
+        if ( (ch == 32) || (ch >= 48 && ch <= 57) ) {
+            ret.push_back(ch);
+        }
+    }
+
+    return ret;
+}
 
 void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
 
@@ -64,6 +87,10 @@ void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
         cout << Constants{}.msgBlank() << "Reloading program configuration...\n";
         conf->readConfigFile();
     }
+    else {
+        cout << Constants{}.errorMsgBlank() << "Unknown task.\n";
+        return;
+    }
 
     cout << Constants{}.msgBlank() << "Done.\n";
 }
@@ -80,18 +107,37 @@ int main() {
     unique_ptr<Configuration> conf(new Configuration());
     conf->readConfigFile();
 
-    size_t currTask = MENU_EXIT;
+    bool work = true;
 
-    showMenu();
+    while ( work ) {
 
-    while ( cin >> currTask ) {
+        size_t currTask = MENU_EXIT;
+        string taskstr;
+        vector<string> tasks;
 
-        if ( currTask > 0 ) {
-            execTask(conf, currTask);
-        }
-        else {
-            cout << Constants{}.msgBlank() << "Bye!\n";
-            break;
+        showMenu();
+        getline(cin, taskstr);
+        taskstr = taskFilter(taskstr);
+
+        boost::split(tasks, taskstr, boost::is_any_of(" "));
+
+        for ( const string task : tasks ) {
+
+            if ( !task.empty() ) {
+                currTask = boost::lexical_cast<size_t>(task);
+            }
+            else {
+                continue;
+            }
+
+            if ( currTask == MENU_EXIT ) {
+                work = false;
+                cout << Constants{}.msgBlank() << "Bye!\n";
+                break;
+            }
+            else {
+                execTask(conf, currTask);
+            }
         }
     }
 

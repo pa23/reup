@@ -30,7 +30,7 @@ struct Identification {
     }
 
     std::string version() const {
-        return "1.2.1";
+        return "1.2.2";
     }
 
     std::string description() const {
@@ -56,9 +56,7 @@ struct Identification {
     std::string licenseInformation() const {
         return "This program comes with ABSOLUTELY NO WARRANTY. This is free software,\n"
                 "and you are welcome to redistribute it under the terms of the GNU General\n"
-                "Public License version 3.\n"
-                "You should have received a copy of the GNU General Public License along\n"
-                "with this program. If not, see <http://www.gnu.org/licenses/>.";
+                "Public License version 3. See http://www.gnu.org/licenses/.";
     }
 };
 
