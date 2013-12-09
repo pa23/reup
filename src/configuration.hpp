@@ -47,6 +47,9 @@ public:
     std::string val_docFilesDir() const {
         return m_docFilesDir;
     }
+    std::string val_engDescription() const {
+        return m_engDescription;
+    }
     std::string val_trimhexDir() const {
         return m_trimhexDir;
     }
@@ -78,14 +81,14 @@ private:
     std::string m_hexFilesDir      = "hex";
     std::string m_mpkFilesDir      = "mpk";
     std::string m_docFilesDir      = "doc";
+    std::string m_engDescription   = "YMZ-530_hex.html";
     std::string m_trimhexDir       = "THex";
     std::string m_trimhexExec      = "trimmhex.bat";
     std::string m_archivExec       = "7z";
     std::string m_archivParam      = "a";
     std::string m_k2rei_swver_addr = "1E5B8A";
     size_t m_k2rei_swver_lenght    = 64;
-    std::vector<std::string> ma_fileExtForDel =
-    {".hex", ".7z", ".zip", ".ini", ".txt"};
+    std::vector<std::string> ma_fileExtForDel = {".hex", ".7z", ".zip", ".ini", ".txt"};
 
 };
 

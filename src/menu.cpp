@@ -46,15 +46,16 @@ using std::unique_ptr;
 void showMenu() {
 
     cout << "\nMenu:\n"
-         << "  " << MENU_TRIMHEX    << ". Trim available hex files\n"
-         << "  " << MENU_UPDHEXID   << ". Update hex identification\n"
-         << "  " << MENU_ARCHHEX    << ". Archive trimmed hex files\n"
-         << "  " << MENU_ADDNEW     << ". Add new hex and mpk files to repository\n"
-         << "  " << MENU_CLEANDIR   << ". Clean trimhex directory\n"
-         << "  " << MENU_PUBREPO    << ". Publish repository\n"
-         << "  " << MENU_ARCHREPO   << ". Archive repository\n"
-         << "  " << MENU_RELOADCONF << ". Reload program configuration\n"
-         << "  " << MENU_EXIT       << ". Exit\n\n"
+         << "  " << MENU_TRIMHEX      << ". Trim available hex files\n"
+         << "  " << MENU_UPDHEXID     << ". Update hex identification\n"
+         << "  " << MENU_ARCHHEX      << ". Archive trimmed hex files\n"
+         << "  " << MENU_EDITENGDESCR << ". Edit engine description file\n"
+         << "  " << MENU_ADDNEW       << ". Add new hex and mpk files to repository\n"
+         << "  " << MENU_CLEANDIR     << ". Clean trimhex directory\n"
+         << "  " << MENU_PUBREPO      << ". Publish repository\n"
+         << "  " << MENU_ARCHREPO     << ". Archive repository\n"
+         << "  " << MENU_RELOADCONF   << ". Reload program configuration\n"
+         << "  " << MENU_EXIT         << ". Exit\n\n"
          << "Your select: ";
 }
 
@@ -151,6 +152,11 @@ void archHex(const unique_ptr<Configuration> &conf) {
     }
 
     boost::filesystem::current_path(realProgPath);
+}
+
+void editEngDescr(const unique_ptr<Configuration> &conf) {
+
+    //
 }
 
 void addNewToRepo(const unique_ptr<Configuration> &conf) {

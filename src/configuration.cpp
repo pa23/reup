@@ -105,6 +105,9 @@ void Configuration::readConfigFile() {
             else if ( elem[0] == "DOC files directory" ) {
                 m_docFilesDir = elem[1];
             }
+            else if ( elem[0] == "Engine description file" ) {
+                m_engDescription = elem[1];
+            }
             else if ( elem[0] == "trimhex directory" ) {
                 m_trimhexDir = elem[1];
             }
@@ -161,6 +164,7 @@ bool Configuration::createBlank() const {
          << "HEX files directory"          << delimiter << m_hexFilesDir        << "\n"
          << "MPK files directory"          << delimiter << m_mpkFilesDir        << "\n"
          << "DOC files directory"          << delimiter << m_docFilesDir        << "\n"
+         << "Engine description file"      << delimiter << m_engDescription     << "\n"
          << "trimhex directory"            << delimiter << m_trimhexDir         << "\n"
          << "trimhex executable"           << delimiter << m_trimhexExec        << "\n"
          << "Archivator executable"        << delimiter << m_archivExec         << "\n"

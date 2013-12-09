@@ -67,6 +67,10 @@ void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
         cout << Constants{}.msgBlank() << "Archiving hex files...\n";
         archHex(conf);
     }
+    else if ( currTask == MENU_EDITENGDESCR ) {
+        cout << Constants{}.msgBlank() << "Editing engine description file...\n";
+        editEngDescr(conf);
+    }
     else if ( currTask == MENU_ADDNEW ) {
         cout << Constants{}.msgBlank() << "Adding new files to repository...\n";
         addNewToRepo(conf);
@@ -111,15 +115,16 @@ int main() {
 
     while ( work ) {
 
-        size_t currTask = MENU_EXIT;
-        string taskstr;
-        vector<string> tasks;
-
         showMenu();
+
+        string taskstr;
         getline(cin, taskstr);
         taskstr = taskFilter(taskstr);
 
+        vector<string> tasks;
         boost::split(tasks, taskstr, boost::is_any_of(" "));
+
+        size_t currTask = MENU_EXIT;
 
         for ( const string task : tasks ) {
 
