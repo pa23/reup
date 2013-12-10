@@ -30,6 +30,7 @@
 #include <vector>
 #include <ctime>
 #include <memory>
+#include <fstream>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
@@ -42,6 +43,8 @@ using std::cout;
 using std::string;
 using std::vector;
 using std::unique_ptr;
+using std::ifstream;
+using std::ofstream;
 
 void showMenu() {
 
@@ -49,7 +52,7 @@ void showMenu() {
          << "  " << MENU_TRIMHEX      << ". Trim available hex files\n"
          << "  " << MENU_UPDHEXID     << ". Update hex identification\n"
          << "  " << MENU_ARCHHEX      << ". Archive trimmed hex files\n"
-         << "  " << MENU_EDITENGDESCR << ". Edit engine description file\n"
+         << "  " << MENU_EDITENGDESCR << ". Update engine description file\n"
          << "  " << MENU_ADDNEW       << ". Add new hex and mpk files to repository\n"
          << "  " << MENU_CLEANDIR     << ". Clean trimhex directory\n"
          << "  " << MENU_PUBREPO      << ". Publish repository\n"
@@ -156,7 +159,75 @@ void archHex(const unique_ptr<Configuration> &conf) {
 
 void editEngDescr(const unique_ptr<Configuration> &conf) {
 
-    //
+    const boost::filesystem::path trimhexDir(conf->val_trimhexDir());
+
+    if ( !boost::filesystem::exists(trimhexDir) ) {
+
+        cout << Constants{}.errorMsgBlank() << "Path \"" << trimhexDir.string() << "\" not exists!\n";
+        return;
+    }
+
+    vector<string> fileNames = findFiles(trimhexDir, ".hex");
+
+    const boost::filesystem::path engDescrFile(
+                boost::filesystem::path(conf->val_localRepoDir()) /
+                boost::filesystem::path(conf->val_docFilesDir()) /
+                boost::filesystem::path(conf->val_engDescription())
+                );
+    const string descrFileName = engDescrFile.string();
+
+    ifstream fin(descrFileName);
+
+    if ( !fin ) {
+        cout << Constants{}.errorMsgBlank() << "Can not open file \"" << descrFileName << "\" to read!\n";
+        return;
+    }
+
+    vector<string> data;
+    string s;
+
+    while ( !fin.eof() ) {
+        getline(fin, s);
+        data.push_back(s);
+    }
+
+    fin.close();
+
+    vector<string> parts;
+    boost::regex regexp;
+
+    for ( const string fileName : fileNames ) {
+
+        boost::split(parts, fileName, boost::is_any_of("_"));
+
+        /* agreement about hex-file name. 5 parts. parts[2] is engine model */
+
+        if ( parts.size() != 5 ) {
+            continue;
+        }
+
+        for ( size_t i=0; i<data.size(); i++ ) {
+
+            regexp = R"(.*)" + parts[2] + R"(_+.*(\.hex</td>){1}$)";
+
+            if ( boost::regex_match(data[i], regexp) ) {
+                data[i] = "            <td>" + fileName + "</td>";
+            }
+        }
+    }
+
+    ofstream fout(descrFileName);
+
+    if ( !fout ) {
+        cout << Constants{}.errorMsgBlank() << "Can not open file \"" << descrFileName << "\" to write!\n";
+        return;
+    }
+
+    for ( const string str : data ) {
+        fout << str << "\n";
+    }
+
+    fout.close();
 }
 
 void addNewToRepo(const unique_ptr<Configuration> &conf) {

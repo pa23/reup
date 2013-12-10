@@ -68,7 +68,7 @@ void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
         archHex(conf);
     }
     else if ( currTask == MENU_EDITENGDESCR ) {
-        cout << Constants{}.msgBlank() << "Editing engine description file...\n";
+        cout << Constants{}.msgBlank() << "Updating engine description file...\n";
         editEngDescr(conf);
     }
     else if ( currTask == MENU_ADDNEW ) {
