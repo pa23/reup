@@ -31,6 +31,8 @@
 #include <ctime>
 #include <memory>
 #include <fstream>
+#include <ctime>
+#include <sstream>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
@@ -45,6 +47,7 @@ using std::vector;
 using std::unique_ptr;
 using std::ifstream;
 using std::ofstream;
+using std::stringstream;
 
 void showMenu() {
 
@@ -431,13 +434,27 @@ void archRepo(const unique_ptr<Configuration> &conf) {
         return;
     }
 
+    time_t t = time(NULL);
+    struct tm *dtnow = localtime(&t);
+    stringstream ss;
+
+    ss << (dtnow->tm_year + 1900)
+       << "-"
+       << (dtnow->tm_mon + 1)
+       << "-"
+       << dtnow->tm_mday
+       << "_"
+       << dtnow->tm_hour
+       << "-"
+       << dtnow->tm_min;
+
     system((conf->val_archivExec()
             + " "
             + conf->val_archivParam()
             + " "
             + localRepoDirectory
-            + "_"
-            + boost::lexical_cast<string>(time(NULL))
+            + "__"
+            + ss.str()
             + ".7z "
             + localRepoDirectory).c_str());
 }
