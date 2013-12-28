@@ -81,6 +81,18 @@ vector<string> findFiles(
     return fileNames;
 }
 
+string trimDate(const string &str) {
+
+    if ( str.size() == 1 ) {
+        return "0" + str;
+    }
+    else if ( str.size() == 2 ) {
+        return str;
+    }
+
+    return "00";
+}
+
 string hexToString(const string &srcStr) {
 
     string destStr;

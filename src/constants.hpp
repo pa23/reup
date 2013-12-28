@@ -21,25 +21,9 @@
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
 
-#include <string>
-
-struct Constants {
-
-    std::string configFile() const {
-        return "reup.conf";
-    }
-
-    std::string parametersDelimiter() const {
-        return "=";
-    }
-
-    std::string errorMsgBlank() const {
-        return "reup ERROR =>\t";
-    }
-
-    std::string msgBlank() const {
-        return "reup ->\t";
-    }
-};
+#define CONFIGFILE     "reup.conf"
+#define PARAMDELIMITER "="
+#define ERRORMSGBLANK  "reup ERROR =>\t"
+#define MSGBLANK       "reup ->\t"
 
 #endif // CONSTANTS_HPP

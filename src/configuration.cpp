@@ -44,30 +44,26 @@ Configuration::Configuration() {
 
 void Configuration::readConfigFile() {
 
-    const string configFileName = Constants{}.configFile();
-    const string errorBlank = Constants{}.errorMsgBlank();
-    const string delimiter = Constants{}.parametersDelimiter();
-
-    const boost::filesystem::path cfgfile(configFileName);
+    const boost::filesystem::path cfgfile(CONFIGFILE);
 
     if ( !boost::filesystem::exists(cfgfile) ) {
 
-        cout << errorBlank << "Cofiguration file \"" << configFileName << "\" not found!\n"
-             << errorBlank << Identification{}.name() << " will create blank of configuration.\n"
-             << errorBlank << "Please edit file \"" << configFileName << "\" and reload program configuration.\n";
+        cout << ERRORMSGBLANK << "Cofiguration file \"" << CONFIGFILE << "\" not found!\n"
+             << ERRORMSGBLANK << Identification{}.name() << " will create blank of configuration.\n"
+             << ERRORMSGBLANK << "Please edit file \"" << CONFIGFILE << "\" and reload program configuration.\n";
 
         if ( !createBlank() ) {
-            cout << errorBlank << "Can not create file \"" << configFileName << "\"!\n"
-                 << errorBlank << "Default values will be used.\n";
+            cout << ERRORMSGBLANK << "Can not create file \"" << CONFIGFILE << "\"!\n"
+                 << ERRORMSGBLANK << "Default values will be used.\n";
         }
 
         return;
     }
 
-    ifstream fin(configFileName);
+    ifstream fin(CONFIGFILE);
 
     if ( !fin ) {
-        cout << errorBlank << "Can not open file \"" << configFileName << "\" to read!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << CONFIGFILE << "\" to read!\n";
         return;
     }
 
@@ -80,7 +76,7 @@ void Configuration::readConfigFile() {
 
         if ( !s.empty() ) {
 
-            boost::split(elem, s, boost::is_any_of(delimiter));
+            boost::split(elem, s, boost::is_any_of(PARAMDELIMITER));
 
             if ( elem.size() != 2 ) {
 
@@ -142,36 +138,32 @@ void Configuration::readConfigFile() {
 
 bool Configuration::createBlank() const {
 
-    const string configFileName = Constants{}.configFile();
-    const string errorBlank = Constants{}.errorMsgBlank();
-    const string delimiter = Constants{}.parametersDelimiter();
-
-    ofstream fout(configFileName);
+    ofstream fout(CONFIGFILE);
 
     if ( !fout ) {
-        cout << errorBlank << "Can not open file \"" << configFileName << "\" to write!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << CONFIGFILE << "\" to write!\n";
         return false;
     }
 
     fout << "//\n"
          << "// This is " << Identification{}.name() << " configuration file.\n"
-         << "// Parameter-Value delimiter is symbol \"" << delimiter << "\".\n"
+         << "// Parameter-Value delimiter is symbol \"" << PARAMDELIMITER << "\".\n"
          << "// Text after \"//\" is comment.\n"
          << "//\n\n";
 
-    fout << "Local repository directory"   << delimiter << m_localRepoDir       << "\n"
-         << "Remote repository directory"  << delimiter << m_remoteRepoDir      << "\n"
-         << "HEX files directory"          << delimiter << m_hexFilesDir        << "\n"
-         << "MPK files directory"          << delimiter << m_mpkFilesDir        << "\n"
-         << "DOC files directory"          << delimiter << m_docFilesDir        << "\n"
-         << "Engine description file"      << delimiter << m_engDescription     << "\n"
-         << "trimhex directory"            << delimiter << m_trimhexDir         << "\n"
-         << "trimhex executable"           << delimiter << m_trimhexExec        << "\n"
-         << "Archivator executable"        << delimiter << m_archivExec         << "\n"
-         << "Archivator parameters"        << delimiter << m_archivParam        << "\n"
-         << "k2rei_swver address"          << delimiter << m_k2rei_swver_addr   << "\n"
-         << "k2rei_swver length"           << delimiter << m_k2rei_swver_lenght << "\n"
-         << "File extensions for deletion" << delimiter;
+    fout << "Local repository directory"   << PARAMDELIMITER << m_localRepoDir       << "\n"
+         << "Remote repository directory"  << PARAMDELIMITER << m_remoteRepoDir      << "\n"
+         << "HEX files directory"          << PARAMDELIMITER << m_hexFilesDir        << "\n"
+         << "MPK files directory"          << PARAMDELIMITER << m_mpkFilesDir        << "\n"
+         << "DOC files directory"          << PARAMDELIMITER << m_docFilesDir        << "\n"
+         << "Engine description file"      << PARAMDELIMITER << m_engDescription     << "\n"
+         << "trimhex directory"            << PARAMDELIMITER << m_trimhexDir         << "\n"
+         << "trimhex executable"           << PARAMDELIMITER << m_trimhexExec        << "\n"
+         << "Archivator executable"        << PARAMDELIMITER << m_archivExec         << "\n"
+         << "Archivator parameters"        << PARAMDELIMITER << m_archivParam        << "\n"
+         << "k2rei_swver address"          << PARAMDELIMITER << m_k2rei_swver_addr   << "\n"
+         << "k2rei_swver length"           << PARAMDELIMITER << m_k2rei_swver_lenght << "\n"
+         << "File extensions for deletion" << PARAMDELIMITER;
 
     for ( size_t i=0; i<ma_fileExtForDel.size(); i++ ) {
 

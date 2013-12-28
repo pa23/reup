@@ -32,6 +32,7 @@ std::vector<std::string> findFiles(
         const boost::filesystem::path &, // path
         const std::string &              // file extension
         );
+std::string trimDate(const std::string &);
 
 std::string hexToString(const std::string &);
 std::string stringToHex(const std::string &);

@@ -71,7 +71,7 @@ void trimHex(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(trimhexDir) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << trimhexDir.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << trimhexDir.string() << "\" not exists!\n";
         return;
     }
 
@@ -97,7 +97,7 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(trimhexDir) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << trimhexDir.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << trimhexDir.string() << "\" not exists!\n";
         return;
     }
 
@@ -113,18 +113,18 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
         hexswver->init(elem, conf->val_k2rei_swver_addr(), conf-> val_k2rei_swver_lenght());
 
         if ( !hexswver->read() ) {
-            cout << Constants{}.errorMsgBlank() << "Errors during k2rei_swver parameter reading in " << elem << ".\n";
+            cout << ERRORMSGBLANK << "Errors during k2rei_swver parameter reading in " << elem << ".\n";
         }
         else {
-            cout << Constants{}.msgBlank() << "Readed hex ID: " << hexswver->val() << "\n";
+            cout << MSGBLANK << "Readed hex ID: " << hexswver->val() << "\n";
         }
 
         if ( !hexswver->write(elem) ) {
-            cout << Constants{}.errorMsgBlank() << "Errors during k2rei_swver parameter writing in " << elem << ".\n";
+            cout << ERRORMSGBLANK << "Errors during k2rei_swver parameter writing in " << elem << ".\n";
         }
         else {
             system((conf->val_trimhexExec() + " " + elem).c_str());
-            cout << Constants{}.msgBlank() << "Written hex ID: " << elem << "\n";
+            cout << MSGBLANK << "Written hex ID: " << elem << "\n";
         }
     }
 
@@ -137,7 +137,7 @@ void archHex(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(trimhexDir) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << trimhexDir.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << trimhexDir.string() << "\" not exists!\n";
         return;
     }
 
@@ -166,7 +166,7 @@ void editEngDescr(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(trimhexDir) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << trimhexDir.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << trimhexDir.string() << "\" not exists!\n";
         return;
     }
 
@@ -182,7 +182,7 @@ void editEngDescr(const unique_ptr<Configuration> &conf) {
     ifstream fin(descrFileName);
 
     if ( !fin ) {
-        cout << Constants{}.errorMsgBlank() << "Can not open file \"" << descrFileName << "\" to read!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << descrFileName << "\" to read!\n";
         return;
     }
 
@@ -222,7 +222,7 @@ void editEngDescr(const unique_ptr<Configuration> &conf) {
     ofstream fout(descrFileName);
 
     if ( !fout ) {
-        cout << Constants{}.errorMsgBlank() << "Can not open file \"" << descrFileName << "\" to write!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << descrFileName << "\" to write!\n";
         return;
     }
 
@@ -239,7 +239,7 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(newPath) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << newPath.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << newPath.string() << "\" not exists!\n";
         return;
     }
 
@@ -249,7 +249,7 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(localRepoHexPath) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoHexPath.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << localRepoHexPath.string() << "\" not exists!\n";
         return;
     }
 
@@ -292,7 +292,7 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(localRepoMpkPath) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoMpkPath.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << localRepoMpkPath.string() << "\" not exists!\n";
         return;
     }
 
@@ -334,7 +334,7 @@ void cleanDir(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(trimhexDir) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << trimhexDir.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << trimhexDir.string() << "\" not exists!\n";
         return;
     }
 
@@ -361,7 +361,7 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     if ( conf->val_remoteRepoDir().empty() ) {
 
-        cout << Constants{}.errorMsgBlank() << "Remote repository directory not defined! Edit configuration file.\n";
+        cout << ERRORMSGBLANK << "Remote repository directory not defined! Edit configuration file.\n";
         return;
     }
 
@@ -369,7 +369,7 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(remoteRepoDirectory) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << remoteRepoDirectory.string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << remoteRepoDirectory.string() << "\" not exists!\n";
         return;
     }
 
@@ -380,19 +380,19 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(localRepoDirectory / hexDirectory) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << (localRepoDirectory / hexDirectory).string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << (localRepoDirectory / hexDirectory).string() << "\" not exists!\n";
         return;
     }
 
     if ( !boost::filesystem::exists(localRepoDirectory / mpkDirectory) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << (localRepoDirectory / mpkDirectory).string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << (localRepoDirectory / mpkDirectory).string() << "\" not exists!\n";
         return;
     }
 
     if ( !boost::filesystem::exists(localRepoDirectory / docDirectory) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << (localRepoDirectory / docDirectory).string() << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << (localRepoDirectory / docDirectory).string() << "\" not exists!\n";
         return;
     }
 
@@ -430,23 +430,18 @@ void archRepo(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(localRepoDirectory) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Path \"" << localRepoDirectory << "\" not exists!\n";
+        cout << ERRORMSGBLANK << "Path \"" << localRepoDirectory << "\" not exists!\n";
         return;
     }
 
     time_t t = time(NULL);
     struct tm *dtnow = localtime(&t);
-    stringstream ss;
 
-    ss << (dtnow->tm_year + 1900)
-       << "-"
-       << (dtnow->tm_mon + 1)
-       << "-"
-       << dtnow->tm_mday
-       << "_"
-       << dtnow->tm_hour
-       << "-"
-       << dtnow->tm_min;
+    string year = boost::lexical_cast<string>(dtnow->tm_year + 1900);
+    string mon  = boost::lexical_cast<string>(dtnow->tm_mon + 1);
+    string day  = boost::lexical_cast<string>(dtnow->tm_mday);
+    string hour = boost::lexical_cast<string>(dtnow->tm_hour);
+    string min  = boost::lexical_cast<string>(dtnow->tm_min);
 
     system((conf->val_archivExec()
             + " "
@@ -454,7 +449,7 @@ void archRepo(const unique_ptr<Configuration> &conf) {
             + " "
             + localRepoDirectory
             + "__"
-            + ss.str()
+            + year + "-" + trimDate(mon) + "-" + trimDate(day) + "_" + trimDate(hour) + "-" + trimDate(min)
             + ".7z "
             + localRepoDirectory).c_str());
 }

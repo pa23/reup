@@ -60,7 +60,7 @@ bool k2rei_swver::read() {
 
     if ( !readHex() ) {
 
-        cout << Constants{}.errorMsgBlank() << "Errors during hex file reading.\n";
+        cout << ERRORMSGBLANK << "Errors during hex file reading.\n";
         return false;
     }
 
@@ -68,13 +68,13 @@ bool k2rei_swver::read() {
 
     if ( !findData() ) {
 
-        cout << Constants{}.errorMsgBlank() << "Errors during finding data in hex file.\n";
+        cout << ERRORMSGBLANK << "Errors during finding data in hex file.\n";
         return false;
     }
 
     if ( !readData() ) {
 
-        cout << Constants{}.errorMsgBlank() << "Errors during k2rei_swver data reading.\n";
+        cout << ERRORMSGBLANK << "Errors during k2rei_swver data reading.\n";
         return false;
     }
 
@@ -85,13 +85,13 @@ bool k2rei_swver::write(const string &str) {
 
     if ( !writeData(str) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Errors during writing data in hex.\n";
+        cout << ERRORMSGBLANK << "Errors during writing data in hex.\n";
         return false;
     }
 
     if ( !writeHex() ) {
 
-        cout << Constants{}.errorMsgBlank() << "Errors during writing hex file.\n";
+        cout << ERRORMSGBLANK << "Errors during writing hex file.\n";
         return false;
     }
 
@@ -102,14 +102,14 @@ bool k2rei_swver::readHex() {
 
     if ( !boost::filesystem::exists(boost::filesystem::path(m_hexFilePath)) ) {
 
-        cout << Constants{}.errorMsgBlank() << "Hex file \"" << m_hexFilePath << "\" not found!\n";
+        cout << ERRORMSGBLANK << "Hex file \"" << m_hexFilePath << "\" not found!\n";
         return false;
     }
 
     ifstream fin(m_hexFilePath);
 
     if ( !fin ) {
-        cout << Constants{}.errorMsgBlank() << "Can not open file \"" << m_hexFilePath << "\" to read!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << m_hexFilePath << "\" to read!\n";
         return false;
     }
 
@@ -325,7 +325,7 @@ bool k2rei_swver::writeHex() const {
     ofstream fout(m_hexFilePath);
 
     if ( !fout ) {
-        cout << Constants{}.errorMsgBlank() << "Can not open file \"" << m_hexFilePath << "\" to write!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << m_hexFilePath << "\" to write!\n";
         return false;
     }
 

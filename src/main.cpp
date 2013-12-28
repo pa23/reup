@@ -56,47 +56,47 @@ string taskFilter(const string &str) {
 void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
 
     if ( currTask == MENU_TRIMHEX ) {
-        cout << Constants{}.msgBlank() << "Trimming available hex files...\n";
+        cout << MSGBLANK << "Trimming available hex files...\n";
         trimHex(conf);
     }
     else if ( currTask == MENU_UPDHEXID ) {
-        cout << Constants{}.msgBlank() << "Updating hex files identification...\n";
+        cout << MSGBLANK << "Updating hex files identification...\n";
         updHexIdent(conf);
     }
     else if ( currTask == MENU_ARCHHEX ) {
-        cout << Constants{}.msgBlank() << "Archiving hex files...\n";
+        cout << MSGBLANK << "Archiving hex files...\n";
         archHex(conf);
     }
     else if ( currTask == MENU_EDITENGDESCR ) {
-        cout << Constants{}.msgBlank() << "Updating engine description file...\n";
+        cout << MSGBLANK << "Updating engine description file...\n";
         editEngDescr(conf);
     }
     else if ( currTask == MENU_ADDNEW ) {
-        cout << Constants{}.msgBlank() << "Adding new files to repository...\n";
+        cout << MSGBLANK << "Adding new files to repository...\n";
         addNewToRepo(conf);
     }
     else if ( currTask == MENU_CLEANDIR ) {
-        cout << Constants{}.msgBlank() << "Cleaning trimhex directory...\n";
+        cout << MSGBLANK << "Cleaning trimhex directory...\n";
         cleanDir(conf);
     }
     else if ( currTask == MENU_PUBREPO ) {
-        cout << Constants{}.msgBlank() << "Publishing repository...\n";
+        cout << MSGBLANK << "Publishing repository...\n";
         publishRepo(conf);
     }
     else if ( currTask == MENU_ARCHREPO ) {
-        cout << Constants{}.msgBlank() << "Archiving repository...\n";
+        cout << MSGBLANK << "Archiving repository...\n";
         archRepo(conf);
     }
     else if ( currTask == MENU_RELOADCONF ) {
-        cout << Constants{}.msgBlank() << "Reloading program configuration...\n";
+        cout << MSGBLANK << "Reloading program configuration...\n";
         conf->readConfigFile();
     }
     else {
-        cout << Constants{}.errorMsgBlank() << "Unknown task.\n";
+        cout << ERRORMSGBLANK << "Unknown task.\n";
         return;
     }
 
-    cout << Constants{}.msgBlank() << "Done.\n";
+    cout << MSGBLANK << "Done.\n";
 }
 
 int main() {
@@ -137,7 +137,7 @@ int main() {
 
             if ( currTask == MENU_EXIT ) {
                 work = false;
-                cout << Constants{}.msgBlank() << "Bye!\n";
+                cout << MSGBLANK << "Bye!\n";
                 break;
             }
             else {
