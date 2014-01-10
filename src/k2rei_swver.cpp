@@ -27,6 +27,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstdint>
 
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
@@ -140,7 +141,7 @@ bool k2rei_swver::readHex() {
 string k2rei_swver::checksum(const string &str) const {
 
     vector<size_t> v = hexToNumBS(str);
-    unsigned char cs = 0;
+    u_int8_t cs = 0;
 
     for ( size_t i=0; i<v.size(); i++ ) {
         cs -= v[i];
@@ -185,9 +186,9 @@ bool k2rei_swver::findData() {
         return false;
     }
 
-    size_t strDataLength = v[0];
+    const size_t strDataLength = v[0];
 
-    const short strtAddr = hexToNum(m_address) & (0xFFFF - strDataLength + 1);
+    const u_int16_t strtAddr = hexToNum(m_address) & (0xFFFF - strDataLength + 1);
 
     const boost::regex regexp(R"(^)" + numToHex(strDataLength) + numToHex(strtAddr) + R"(00.*)");
 
@@ -214,7 +215,7 @@ bool k2rei_swver::readData() {
 
     string str;
     m_readedData.clear();
-    size_t maxsize = m_dataLength * 2;
+    const size_t maxsize = m_dataLength * 2;
 
     for ( size_t j=m_firstByteInd; j<(ma_hexData[m_beginStrNum].size()-2); j++ ) {
 
@@ -228,10 +229,16 @@ bool k2rei_swver::readData() {
         }
     }
 
+    if ( str.size() == maxsize ) {
+
+        m_readedData = hexToString(str);
+        return true;
+    }
+
     for ( size_t i=(m_beginStrNum+1); i<ma_hexData.size(); i++ ) {
 
         if ( ma_hexData[i].size() != m_correctStrDataSize ) {
-            return false;
+            continue;
         }
 
         for ( size_t j=8; j<(m_correctStrDataSize-2); j++ ) {
@@ -244,6 +251,12 @@ bool k2rei_swver::readData() {
             else {
                 str.push_back(ma_hexData[i][j]);
             }
+        }
+
+        if ( str.size() == maxsize ) {
+
+            m_readedData = hexToString(str);
+            break;
         }
     }
 
@@ -258,7 +271,7 @@ bool k2rei_swver::writeData(const string &str) {
 
     string dataForWrite = stringToHex(str);
 
-    size_t maxsize = m_dataLength * 2;
+    const size_t maxsize = m_dataLength * 2;
 
     if ( dataForWrite.size() > maxsize ) {
         return false;
@@ -294,7 +307,7 @@ bool k2rei_swver::writeData(const string &str) {
     for ( size_t i=(m_beginStrNum+1); i<ma_hexData.size(); i++ ) {
 
         if ( ma_hexData[i].size() != m_correctStrDataSize ) {
-            return false;
+            continue;
         }
 
         for ( size_t j=8; j<(m_correctStrDataSize-2); j++ ) {
