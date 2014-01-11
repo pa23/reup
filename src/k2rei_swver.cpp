@@ -219,20 +219,13 @@ bool k2rei_swver::readData() {
 
     for ( size_t j=m_firstByteInd; j<(ma_hexData[m_beginStrNum].size()-2); j++ ) {
 
+        str.push_back(ma_hexData[m_beginStrNum][j]);
+
         if ( str.size() == maxsize ) {
 
             m_readedData = hexToString(str);
             return true;
         }
-        else {
-            str.push_back(ma_hexData[m_beginStrNum][j]);
-        }
-    }
-
-    if ( str.size() == maxsize ) {
-
-        m_readedData = hexToString(str);
-        return true;
     }
 
     for ( size_t i=(m_beginStrNum+1); i<ma_hexData.size(); i++ ) {
@@ -243,20 +236,13 @@ bool k2rei_swver::readData() {
 
         for ( size_t j=8; j<(m_correctStrDataSize-2); j++ ) {
 
+            str.push_back(ma_hexData[i][j]);
+
             if ( str.size() == maxsize ) {
 
                 m_readedData = hexToString(str);
                 return true;
             }
-            else {
-                str.push_back(ma_hexData[i][j]);
-            }
-        }
-
-        if ( str.size() == maxsize ) {
-
-            m_readedData = hexToString(str);
-            break;
         }
     }
 

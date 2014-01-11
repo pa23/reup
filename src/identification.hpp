@@ -30,7 +30,7 @@ struct Identification {
     }
 
     std::string version() const {
-        return "1.3.3";
+        return "1.3.4";
     }
 
     std::string description() const {
