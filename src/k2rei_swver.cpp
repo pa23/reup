@@ -141,7 +141,7 @@ bool k2rei_swver::readHex() {
 string k2rei_swver::checksum(const string &str) const {
 
     vector<size_t> v = hexToNumBS(str);
-    u_int8_t cs = 0;
+    uint8_t cs = 0;
 
     for ( size_t i=0; i<v.size(); i++ ) {
         cs -= v[i];
@@ -188,7 +188,7 @@ bool k2rei_swver::findData() {
 
     const size_t strDataLength = v[0];
 
-    const u_int16_t strtAddr = hexToNum(m_address) & (0xFFFF - strDataLength + 1);
+    const uint16_t strtAddr = hexToNum(m_address) & (0xFFFF - strDataLength + 1);
 
     const boost::regex regexp(R"(^)" + numToHex(strDataLength) + numToHex(strtAddr) + R"(00.*)");
 
