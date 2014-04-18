@@ -4,7 +4,7 @@
 
     File: identification.hpp
 
-    Copyright (C) 2013 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2014 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ struct Identification {
     }
 
     std::string version() const {
-        return "1.3.5";
+        return "1.4.0";
     }
 
     std::string description() const {
