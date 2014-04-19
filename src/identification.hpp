@@ -38,7 +38,7 @@ struct Identification {
     }
 
     std::string copyrightYears() const {
-        return "2013";
+        return "2013-2014";
     }
 
     std::string authors() const {

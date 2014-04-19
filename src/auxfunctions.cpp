@@ -19,11 +19,14 @@
 */
 
 #include "auxfunctions.hpp"
+#include "constants.hpp"
 
 #include <string>
 #include <vector>
 #include <sstream>
 #include <algorithm>
+#include <fstream>
+#include <iostream>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
@@ -33,6 +36,10 @@ using std::string;
 using std::vector;
 using std::stringstream;
 using std::hex;
+using std::ifstream;
+using std::ios;
+using std::streampos;
+using std::cout;
 
 vector<string> findFiles(
         const boost::filesystem::path &rootDir,
@@ -91,6 +98,30 @@ string trimDate(const string &str) {
     }
 
     return "00";
+}
+
+string readFile(const string &filename) {
+
+    string fstr;
+
+    ifstream fin(filename, ios::in|ios::binary|ios::ate);
+
+    if ( !fin ) {
+        cout << ERRORMSGBLANK << "Can not open file \"" << filename << "\" to read!\n";
+        return fstr;
+    }
+
+    streampos size = fin.tellg();
+    vector<char> fdata(size);
+
+    fin.seekg(0, ios::beg);
+    fin.read(fdata.data(), size);
+
+    fstr = fdata.data();
+
+    fin.close();
+
+    return fstr;
 }
 
 string hexToString(const string &srcStr) {

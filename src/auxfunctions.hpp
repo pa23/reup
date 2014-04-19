@@ -34,6 +34,8 @@ std::vector<std::string> findFiles(
         );
 std::string trimDate(const std::string &);
 
+std::string readFile(const std::string &);
+
 std::string hexToString(const std::string &);
 std::string stringToHex(const std::string &);
 
