@@ -60,7 +60,7 @@ void showMenu() {
          << "  " << MENU_EDITENGDESCR << ". Update engine description file\n"
          << "  " << MENU_ADDNEW       << ". Add new hex and mpk files to repository\n"
          << "  " << MENU_CLEANDIR     << ". Clean trimhex directory\n"
-         << "  " << MENU_PUBREPO      << ". Publish repository\n"
+//         << "  " << MENU_PUBREPO      << ". Publish repository\n"
          << "  " << MENU_ARCHREPO     << ". Archive repository\n"
          << "  " << MENU_RELOADCONF   << ". Reload program configuration\n"
          << "  " << MENU_EXIT         << ". Exit\n\n"

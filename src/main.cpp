@@ -79,10 +79,10 @@ void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
         cout << MSGBLANK << "Cleaning trimhex directory...\n";
         cleanDir(conf);
     }
-    else if ( currTask == MENU_PUBREPO ) {
-        cout << MSGBLANK << "Publishing repository...\n";
-        publishRepo(conf);
-    }
+//    else if ( currTask == MENU_PUBREPO ) {
+//        cout << MSGBLANK << "Publishing repository...\n";
+//        publishRepo(conf);
+//    }
     else if ( currTask == MENU_ARCHREPO ) {
         cout << MSGBLANK << "Archiving repository...\n";
         archRepo(conf);
