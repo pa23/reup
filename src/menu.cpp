@@ -30,16 +30,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <ctime>
 #include <memory>
 #include <fstream>
-#include <ctime>
 #include <sstream>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 
@@ -60,7 +57,7 @@ void showMenu() {
          << "  " << MENU_EDITENGDESCR << ". Update engine description file\n"
          << "  " << MENU_ADDNEW       << ". Add new hex and mpk files to repository\n"
          << "  " << MENU_CLEANDIR     << ". Clean trimhex directory\n"
-//         << "  " << MENU_PUBREPO      << ". Publish repository\n"
+         << "  " << MENU_PUBREPO      << ". Publish repository\n"
          << "  " << MENU_ARCHREPO     << ". Archive repository\n"
          << "  " << MENU_RELOADCONF   << ". Reload program configuration\n"
          << "  " << MENU_EXIT         << ". Exit\n\n"
@@ -76,7 +73,7 @@ void trimHex(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    vector<string> fileNames = findFiles(trimhexDir, ".hex");
+    vector<string> fileNames = readDir(trimhexDir, ".hex", READDIR_FILESONLY);
 
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(trimhexDir);
@@ -99,7 +96,7 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    vector<string> fileNames = findFiles(trimhexDir, ".hex");
+    vector<string> fileNames = readDir(trimhexDir, ".hex", READDIR_FILESONLY);
 
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(trimhexDir);
@@ -138,7 +135,7 @@ void archHex(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    vector<string> fileNames = findFiles(trimhexDir, ".hex");
+    vector<string> fileNames = readDir(trimhexDir, ".hex", READDIR_FILESONLY);
 
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(trimhexDir);
@@ -166,7 +163,7 @@ void editEngDescr(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    vector<string> fileNames = findFiles(trimhexDir, ".hex");
+    vector<string> fileNames = readDir(trimhexDir, ".hex", READDIR_FILESONLY);
 
     const boost::filesystem::path engDescrFile(
                 boost::filesystem::path(conf->val_localRepoDir()) /
@@ -210,12 +207,6 @@ void editEngDescr(const unique_ptr<Configuration> &conf) {
             regexp = R"(.+()" + parts[2] + R"(_){1}.+(\.hex){1}.+)";
 
             const boost::filesystem::path currHexFile = trimhexDir / boost::filesystem::path(fileName);
-            // const string fstr = readFile(currHexFile.string());
-
-            // if ( fstr.empty() ) {
-            //     cout << WARNMSGBLANK << "No content in\"" << fileName << "\". Updating info skipped!\n";
-            //     break;
-            // }
 
             if ( boost::regex_match(data[i], regexp) ) {
                 data[i] = "            <td>" + fileName + "<br>(" + md5(readFile(currHexFile.string())) + ")</td>";
@@ -255,8 +246,8 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    vector<string> newFileNames = findFiles(newPath, ".hex");
-    vector<string> localRepoFileNames = findFiles(localRepoHexPath, ".hex");
+    vector<string> newFileNames = readDir(newPath, ".hex", READDIR_FILESONLY);
+    vector<string> localRepoFileNames = readDir(localRepoHexPath, ".hex", READDIR_FILESONLY);
 
     vector<string> parts;
     boost::regex regexp;
@@ -297,8 +288,8 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    newFileNames = findFiles(newPath, ".zip");
-    localRepoFileNames = findFiles(localRepoMpkPath, ".zip");
+    newFileNames = readDir(newPath, ".zip", READDIR_FILESONLY);
+    localRepoFileNames = readDir(localRepoMpkPath, ".zip", READDIR_FILESONLY);
 
     for ( const string newFileName : newFileNames ) {
 
@@ -342,7 +333,7 @@ void cleanDir(const unique_ptr<Configuration> &conf) {
     vector<string> tmp;
 
     for ( const string ext : conf->val_fileExtToDel() ) {
-        tmp = findFiles(trimhexDir, ext);
+        tmp = readDir(trimhexDir, ext, READDIR_FILESONLY);
         fileNames.insert(fileNames.end(), tmp.begin(), tmp.end());
     }
 
@@ -390,59 +381,78 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    boost::filesystem::remove_all(remoteRepoDirectory);
-    boost::filesystem::create_directory(remoteRepoDirectory);
-    boost::filesystem::create_directory(remoteRepoDirectory / hexDirectory);
-    boost::filesystem::create_directory(remoteRepoDirectory / mpkDirectory);
-    boost::filesystem::create_directory(remoteRepoDirectory / docDirectory);
+    //
 
-    vector<string> filesForCopy = findFiles(localRepoDirectory / hexDirectory, "");
+    vector<string> dirNames = readDir(remoteRepoDirectory, "", READDIR_DIRSONLY);
 
-    for ( const string fileName : filesForCopy ) {
-        boost::filesystem::copy_file(localRepoDirectory / hexDirectory / boost::filesystem::path(fileName),
-                                     remoteRepoDirectory / hexDirectory / boost::filesystem::path(fileName));
+    const boost::filesystem::path realProgPath = boost::filesystem::current_path();
+    boost::filesystem::current_path(remoteRepoDirectory);
+
+    for ( const string dir : dirNames ) {
+
+        archDir(conf->val_archivExec() + " " + conf->val_archivParam(),
+                boost::filesystem::path(dir).filename().string(), false);
+        boost::filesystem::remove_all(dir);
     }
 
-    filesForCopy = findFiles(localRepoDirectory / mpkDirectory, "");
+    boost::filesystem::current_path(realProgPath);
 
-    for ( const string fileName : filesForCopy ) {
-        boost::filesystem::copy_file(localRepoDirectory / mpkDirectory / boost::filesystem::path(fileName),
-                                     remoteRepoDirectory / mpkDirectory / boost::filesystem::path(fileName));
+    const boost::filesystem::path newRemoteRepoDir(remoteRepoDirectory /
+                                                   (localRepoDirectory.filename().string() + "__" + currDateTime()));
+
+    boost::filesystem::create_directory(newRemoteRepoDir);
+    boost::filesystem::create_directory(newRemoteRepoDir / hexDirectory);
+    boost::filesystem::create_directory(newRemoteRepoDir / mpkDirectory);
+    boost::filesystem::create_directory(newRemoteRepoDir / docDirectory);
+
+    ofstream fout((newRemoteRepoDir / (newRemoteRepoDir.filename().string() + ".md5")).string());
+    bool md5needed = true;
+
+    if ( !fout ) {
+        cout << ERRORMSGBLANK << "Can not create md5 file! This operation will be skipped.\n";
+        md5needed = false;
     }
 
-    filesForCopy = findFiles(localRepoDirectory / docDirectory, "");
+    vector<string> filesForCopy = readDir(localRepoDirectory / hexDirectory, "", READDIR_FILESONLY);
 
     for ( const string fileName : filesForCopy ) {
-        boost::filesystem::copy_file(localRepoDirectory / docDirectory / boost::filesystem::path(fileName),
-                                     remoteRepoDirectory / docDirectory / boost::filesystem::path(fileName));
+
+        boost::filesystem::path copiedFile(newRemoteRepoDir / hexDirectory / boost::filesystem::path(fileName));
+        boost::filesystem::copy_file(localRepoDirectory / hexDirectory / boost::filesystem::path(fileName), copiedFile);
+
+        if ( md5needed ) {
+            fout << md5(readFile(copiedFile.string())) << " *" << (hexDirectory / copiedFile.filename()).string() << "\n";
+        }
     }
+
+    filesForCopy = readDir(localRepoDirectory / mpkDirectory, "", READDIR_FILESONLY);
+
+    for ( const string fileName : filesForCopy ) {
+
+        boost::filesystem::path copiedFile(newRemoteRepoDir / mpkDirectory / boost::filesystem::path(fileName));
+        boost::filesystem::copy_file(localRepoDirectory / mpkDirectory / boost::filesystem::path(fileName), copiedFile);
+
+        if ( md5needed ) {
+            fout << md5(readFile(copiedFile.string())) << " *" << (mpkDirectory / copiedFile.filename()).string() << "\n";
+        }
+    }
+
+    filesForCopy = readDir(localRepoDirectory / docDirectory, "", READDIR_FILESONLY);
+
+    for ( const string fileName : filesForCopy ) {
+
+        boost::filesystem::path copiedFile(newRemoteRepoDir / docDirectory / boost::filesystem::path(fileName));
+        boost::filesystem::copy_file(localRepoDirectory / docDirectory / boost::filesystem::path(fileName), copiedFile);
+
+        if ( md5needed ) {
+            fout << md5(readFile(copiedFile.string())) << " *" << (docDirectory / copiedFile.filename()).string() << "\n";
+        }
+    }
+
+    fout.close();
 }
 
-void archRepo(const unique_ptr<Configuration> &conf) {
+void archLocalRepo(const unique_ptr<Configuration> &conf) {
 
-    const string localRepoDirectory = conf->val_localRepoDir();
-
-    if ( !boost::filesystem::exists(localRepoDirectory) ) {
-        cout << ERRORMSGBLANK << "Path \"" << localRepoDirectory << "\" not exists!\n";
-        return;
-    }
-
-    time_t t = time(NULL);
-    struct tm *dtnow = localtime(&t);
-
-    string year = boost::lexical_cast<string>(dtnow->tm_year + 1900);
-    string mon  = boost::lexical_cast<string>(dtnow->tm_mon + 1);
-    string day  = boost::lexical_cast<string>(dtnow->tm_mday);
-    string hour = boost::lexical_cast<string>(dtnow->tm_hour);
-    string min  = boost::lexical_cast<string>(dtnow->tm_min);
-
-    system((conf->val_archivExec()
-            + " "
-            + conf->val_archivParam()
-            + " "
-            + localRepoDirectory
-            + "__"
-            + year + "-" + trimDate(mon) + "-" + trimDate(day) + "_" + trimDate(hour) + "-" + trimDate(min)
-            + ".7z "
-            + localRepoDirectory).c_str());
+    archDir(conf->val_archivExec() + " " + conf->val_archivParam(), conf->val_localRepoDir(), true);
 }

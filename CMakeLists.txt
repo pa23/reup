@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 set(APP_NAME reup)
-set(APP_VERSION "1.4.1")
+set(APP_VERSION "1.5.0")
 
 project(${APP_NAME})
 
@@ -40,10 +40,13 @@ else()
     set(Boost_USE_STATIC_LIBS OFF)
     set(Boost_USE_SHARED_LIBS ON)
 endif()
+
 find_package(Boost COMPONENTS system filesystem regex REQUIRED)
+
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
 endif()
+
 if(MINGW)
     set(BUILD_STATIC_LIBS ON)
     set(BUILD_SHARED_LIBS OFF)
@@ -54,6 +57,7 @@ else()
 endif()
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
+
 target_link_libraries(
     ${PROJECT_NAME}
     ${Boost_SYSTEM_LIBRARY}

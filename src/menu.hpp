@@ -26,7 +26,6 @@
 #include "configuration.hpp"
 
 enum {
-
     MENU_EXIT,
     MENU_TRIMHEX,
     MENU_UPDHEXID,
@@ -48,6 +47,6 @@ void editEngDescr(const std::unique_ptr<Configuration> &);
 void addNewToRepo(const std::unique_ptr<Configuration> &);
 void cleanDir(const std::unique_ptr<Configuration> &);
 void publishRepo(const std::unique_ptr<Configuration> &);
-void archRepo(const std::unique_ptr<Configuration> &);
+void archLocalRepo(const std::unique_ptr<Configuration> &);
 
 #endif // MENU_HPP

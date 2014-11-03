@@ -49,7 +49,7 @@ void Configuration::readConfigFile() {
     if ( !boost::filesystem::exists(cfgfile) ) {
 
         cout << ERRORMSGBLANK << "Cofiguration file \"" << CONFIGFILE << "\" not found!\n"
-             << ERRORMSGBLANK << Identification{}.name() << " will create blank of configuration.\n"
+             << ERRORMSGBLANK << PRGNAME << " will create blank of configuration.\n"
              << ERRORMSGBLANK << "Please edit file \"" << CONFIGFILE << "\" and reload program configuration.\n";
 
         if ( !createBlank() ) {
@@ -146,7 +146,7 @@ bool Configuration::createBlank() const {
     }
 
     fout << "//\n"
-         << "// This is " << Identification{}.name() << " configuration file.\n"
+         << "// This is " << PRGNAME << " configuration file.\n"
          << "// Parameter-Value delimiter is symbol \"" << PARAMDELIMITER << "\".\n"
          << "// Text after \"//\" is comment.\n"
          << "//\n\n";

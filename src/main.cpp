@@ -79,13 +79,13 @@ void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
         cout << MSGBLANK << "Cleaning trimhex directory...\n";
         cleanDir(conf);
     }
-//    else if ( currTask == MENU_PUBREPO ) {
-//        cout << MSGBLANK << "Publishing repository...\n";
-//        publishRepo(conf);
-//    }
+    else if ( currTask == MENU_PUBREPO ) {
+        cout << MSGBLANK << "Publishing repository...\n";
+        publishRepo(conf);
+    }
     else if ( currTask == MENU_ARCHREPO ) {
         cout << MSGBLANK << "Archiving repository...\n";
-        archRepo(conf);
+        archLocalRepo(conf);
     }
     else if ( currTask == MENU_RELOADCONF ) {
         cout << MSGBLANK << "Reloading program configuration...\n";
@@ -101,12 +101,12 @@ void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
 
 int main() {
 
-    cout << "\n\t" << Identification{}.name() << " v" << Identification{}.version() << "\n"
-         << "\t" << Identification{}.description() << "\n\n"
-         << "Copyright (C) " << Identification{}.copyrightYears() << " " << Identification{}.authors() << "\n\n"
-         << "Source code hosting: " << Identification{}.sourceCodeHosting() << "\n"
-         << "Author's blog (RU): " << Identification{}.authorsBlog() << "\n\n"
-         << Identification{}.licenseInformation() << "\n\n";
+    cout << "\n\t" << PRGNAME << " v" << PRGVERSION << "\n"
+         << "\t" << PRGDESCRIPTION << "\n\n"
+         << "Copyright (C) " << PRGCOPYRIGHTYEARS << " " << PRGAUTHORS << "\n"
+         << "Source code hosting: " << PRGSOURCECODEHOSTING << "\n"
+         << "Author's blog (RU): " << PRGAUTHORSBLOG << "\n\n"
+         << PRGLICENSEINFORMATION << "\n\n";
 
     unique_ptr<Configuration> conf(new Configuration());
     conf->readConfigFile();

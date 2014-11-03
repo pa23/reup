@@ -23,41 +23,13 @@
 
 #include <string>
 
-struct Identification {
-
-    std::string name() const {
-        return "reup";
-    }
-
-    std::string version() const {
-        return "1.4.1";
-    }
-
-    std::string description() const {
-        return "Automatization of support YMZ-530 ECU SW repository.";
-    }
-
-    std::string copyrightYears() const {
-        return "2013-2014";
-    }
-
-    std::string authors() const {
-        return "Artem Petrov <pa2311@gmail.com>";
-    }
-
-    std::string sourceCodeHosting() const {
-        return "https://github.com/pa23/reup";
-    }
-
-    std::string authorsBlog() const {
-        return "http://pa2311.blogspot.com";
-    }
-
-    std::string licenseInformation() const {
-        return "This program comes with ABSOLUTELY NO WARRANTY. This is free software,\n"
-                "and you are welcome to redistribute it under the terms of the GNU General\n"
-                "Public License version 3. See http://www.gnu.org/licenses/.";
-    }
-};
+#define PRGNAME "reup"
+#define PRGVERSION "1.5.0"
+#define PRGDESCRIPTION "Automatization of support YMZ-530 ECU SW repository."
+#define PRGCOPYRIGHTYEARS "2013-2014"
+#define PRGAUTHORS "Artem Petrov <pa2311@gmail.com>"
+#define PRGSOURCECODEHOSTING "https://github.com/pa23/reup"
+#define PRGAUTHORSBLOG "http://pa2311.blogspot.com"
+#define PRGLICENSEINFORMATION "This program comes with ABSOLUTELY NO WARRANTY. This is free software,\nand you are welcome to redistribute it under the terms of the GNU General\nPublic License version 3. See http://www.gnu.org/licenses/."
 
 #endif // IDENTIFICATION_HPP

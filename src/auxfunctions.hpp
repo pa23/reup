@@ -23,15 +23,21 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <boost/filesystem.hpp>
 
-std::vector<std::string> findFiles(
+#include "configuration.hpp"
+
+std::vector<std::string> readDir(
         const boost::filesystem::path &, // path
-        const std::string &              // file extension
+        const std::string &,             // file extension
+        size_t                           // selection mode
         );
+
+std::string currDateTime();
 std::string trimDate(const std::string &);
 
 std::string readFile(const std::string &);
@@ -42,5 +48,11 @@ std::string stringToHex(const std::string &);
 std::vector<size_t> hexToNumBS(const std::string &);
 size_t hexToNum(const std::string &);
 std::string numToHex(size_t);
+
+void archDir(
+    const std::string &, // command
+    const std::string &, // path
+    bool                 // withDateTime flag
+    );
 
 #endif // AUXFUNCTIONS_HPP

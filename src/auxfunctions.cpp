@@ -20,6 +20,7 @@
 
 #include "auxfunctions.hpp"
 #include "constants.hpp"
+#include "configuration.hpp"
 
 #include <string>
 #include <vector>
@@ -27,10 +28,13 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <memory>
+#include <ctime>
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 
 using std::string;
 using std::vector;
@@ -40,10 +44,13 @@ using std::ifstream;
 using std::ios;
 using std::streampos;
 using std::cout;
+using std::unique_ptr;
+using std::ostringstream;
 
-vector<string> findFiles(
+vector<string> readDir(
         const boost::filesystem::path &rootDir,
-        const string &extension
+        const string &extension,
+        size_t selMode
         ) {
 
     vector<string> fileNames;
@@ -68,17 +75,24 @@ vector<string> findFiles(
 
         fs = boost::filesystem::status(*dit);
 
-        if ( selectAll ) {
+        if ( selMode == READDIR_FILESONLY ) {
 
-            if ( boost::filesystem::is_regular_file(fs) ) {
-                fileNames.push_back(dit->path().filename().string());
+            if ( selectAll ) {
+                if ( boost::filesystem::is_regular_file(fs) ) {
+                    fileNames.push_back(dit->path().filename().string());
+                }
+            }
+            else {
+                if ( boost::filesystem::is_regular_file(fs) &&
+                     dit->path().extension() == extension ) {
+                    fileNames.push_back(dit->path().filename().string());
+                }
             }
         }
-        else {
+        else if ( selMode == READDIR_DIRSONLY ) {
 
-            if ( boost::filesystem::is_regular_file(fs) &&
-                 dit->path().extension() == extension ) {
-                fileNames.push_back(dit->path().filename().string());
+            if ( boost::filesystem::is_directory(fs) ) {
+                fileNames.push_back(dit->path().string());
             }
         }
 
@@ -86,6 +100,20 @@ vector<string> findFiles(
     }
 
     return fileNames;
+}
+
+string currDateTime() {
+
+    time_t t = time(NULL);
+    struct tm *dtnow = localtime(&t);
+
+    const string year = boost::lexical_cast<string>(dtnow->tm_year + 1900);
+    const string mon  = boost::lexical_cast<string>(dtnow->tm_mon + 1);
+    const string day  = boost::lexical_cast<string>(dtnow->tm_mday);
+    const string hour = boost::lexical_cast<string>(dtnow->tm_hour);
+    const string min  = boost::lexical_cast<string>(dtnow->tm_min);
+
+    return year + "-" + trimDate(mon) + "-" + trimDate(day) + "_" + trimDate(hour) + "-" + trimDate(min);
 }
 
 string trimDate(const string &str) {
@@ -102,26 +130,18 @@ string trimDate(const string &str) {
 
 string readFile(const string &filename) {
 
-    string fstr;
+    ifstream fin(filename, ios::in|ios::binary);
 
-    ifstream fin(filename, ios::in|ios::binary|ios::ate);
-
-    if ( !fin ) {
-        cout << ERRORMSGBLANK << "Can not open file \"" << filename << "\" to read!\n";
-        return fstr;
+    if ( fin ) {
+        ostringstream ostrm;
+        ostrm << fin.rdbuf();
+        fin.close();
+        return ostrm.str();
     }
-
-    streampos size = fin.tellg();
-    vector<char> fdata(size);
-
-    fin.seekg(0, ios::beg);
-    fin.read(fdata.data(), size);
-
-    fstr = fdata.data();
-
-    fin.close();
-
-    return fstr;
+    else {
+        cout << ERRORMSGBLANK << "Can not open file \"" << filename << "\" to read!\n";
+        return "";
+    }
 }
 
 string hexToString(const string &srcStr) {
@@ -215,4 +235,19 @@ string numToHex(size_t num) {
     transform(str.begin(), str.end(), str.begin(), ::toupper);
 
     return str;
+}
+
+void archDir(const string &command, const string &path, bool withDateTime) {
+
+    if ( !boost::filesystem::exists(path) ) {
+        cout << ERRORMSGBLANK << "Path \"" << path << "\" not exists!\n";
+        return;
+    }
+
+    if ( withDateTime ) {
+        system((command + " " + path + "__" + currDateTime() + ".7z " + path).c_str());
+    }
+    else {
+        system((command + " " + path + ".7z " + path).c_str());
+    }
 }

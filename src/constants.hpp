@@ -27,4 +27,10 @@
 #define WARNMSGBLANK   "reup WARNING =>\t"
 #define MSGBLANK       "reup ->\t"
 
+enum {
+    READDIR_FILESONLY,
+    READDIR_DIRSONLY,
+    READDIR_ALL
+};
+
 #endif // CONSTANTS_HPP
