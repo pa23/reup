@@ -245,9 +245,11 @@ void archDir(const string &command, const string &path, bool withDateTime) {
     }
 
     if ( withDateTime ) {
-        system((command + " " + path + "__" + currDateTime() + ".7z " + path).c_str());
+        system((command + " " + path + "__" + currDateTime() + ".7z " + path + " > " + TEMPFILE).c_str());
     }
     else {
-        system((command + " " + path + ".7z " + path).c_str());
+        system((command + " " + path + ".7z " + path + " > " + TEMPFILE).c_str());
     }
+
+    boost::filesystem::remove(TEMPFILE);
 }

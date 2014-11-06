@@ -40,7 +40,7 @@ public:
     bool write(const std::string &);
 
     std::string val() const {
-        return m_readedData;
+        return m_readData;
     }
 
 private:
@@ -54,7 +54,7 @@ private:
     size_t m_beginStrNum = 0;              // findData()
     size_t m_correctStrDataSize = 0;
     size_t m_firstByteInd = 0;
-    std::string m_readedData;              // readData()
+    std::string m_readData;              // readData()
 
     bool readHex();
     std::string checksum(const std::string &) const;

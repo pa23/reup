@@ -80,9 +80,11 @@ void trimHex(const unique_ptr<Configuration> &conf) {
 
     for ( const string fileName : fileNames ) {
         if ( boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) {
-            system((conf->val_trimhexExec() + " " + fileName).c_str());
+            system((conf->val_trimhexExec() + " " + fileName + " > " + TEMPFILE).c_str());
         }
     }
+
+    boost::filesystem::remove(TEMPFILE);
 
     boost::filesystem::current_path(realProgPath);
 }
@@ -111,17 +113,19 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
             cout << ERRORMSGBLANK << "Errors during k2rei_swver parameter reading in " << elem << ".\n";
         }
         else {
-            cout << MSGBLANK << "Readed hex ID: " << hexswver->val() << "\n";
+            cout << MSGBLANK << "  Read  hex ID: " << hexswver->val() << "\n";
         }
 
         if ( !hexswver->write(elem) ) {
             cout << ERRORMSGBLANK << "Errors during k2rei_swver parameter writing in " << elem << ".\n";
         }
         else {
-            system((conf->val_trimhexExec() + " " + elem).c_str());
-            cout << MSGBLANK << "Written hex ID: " << elem << "\n";
+            system((conf->val_trimhexExec() + " " + elem + " > " + TEMPFILE).c_str());
+            cout << MSGBLANK << "  Wrote hex ID: " << elem << "\n";
         }
     }
+
+    boost::filesystem::remove(TEMPFILE);
 
     boost::filesystem::current_path(realProgPath);
 }
@@ -148,8 +152,10 @@ void archHex(const unique_ptr<Configuration> &conf) {
         }
 
         /* agreement about archived hex-files format and extension */
-        system((conf->val_archivExec() + " " + conf->val_archivParam() + " " + fileName + ".7z " + fileName).c_str());
+        system((conf->val_archivExec() + " " + conf->val_archivParam() + " " + fileName + ".7z " + fileName + " > " + TEMPFILE).c_str());
     }
+
+    boost::filesystem::remove(TEMPFILE);
 
     boost::filesystem::current_path(realProgPath);
 }
@@ -388,6 +394,8 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
     boost::filesystem::current_path(remoteRepoDirectory);
 
+    cout << MSGBLANK << "  Archiving old repo directories...\n";
+
     for ( const string dir : dirNames ) {
 
         archDir(conf->val_archivExec() + " " + conf->val_archivParam(),
@@ -412,6 +420,8 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
         cout << ERRORMSGBLANK << "Can not create md5 file! This operation will be skipped.\n";
         md5needed = false;
     }
+
+    cout << MSGBLANK << "  Copying new repo...\n";
 
     vector<string> filesForCopy = readDir(localRepoDirectory / hexDirectory, "", READDIR_FILESONLY);
 

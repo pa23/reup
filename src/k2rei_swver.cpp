@@ -54,7 +54,7 @@ void k2rei_swver::init(const string &hexP, const string &addr, size_t l) {
     m_beginStrNum = 0;
     m_correctStrDataSize = 0;
     m_firstByteInd = 0;
-    m_readedData.clear();
+    m_readData.clear();
 }
 
 bool k2rei_swver::read() {
@@ -214,7 +214,7 @@ bool k2rei_swver::findData() {
 bool k2rei_swver::readData() {
 
     string str;
-    m_readedData.clear();
+    m_readData.clear();
     const size_t maxsize = m_dataLength * 2;
 
     for ( size_t j=m_firstByteInd; j<(ma_hexData[m_beginStrNum].size()-2); j++ ) {
@@ -223,7 +223,7 @@ bool k2rei_swver::readData() {
 
         if ( str.size() == maxsize ) {
 
-            m_readedData = hexToString(str);
+            m_readData = hexToString(str);
             return true;
         }
     }
@@ -240,7 +240,7 @@ bool k2rei_swver::readData() {
 
             if ( str.size() == maxsize ) {
 
-                m_readedData = hexToString(str);
+                m_readData = hexToString(str);
                 return true;
             }
         }
