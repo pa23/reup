@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 set(APP_NAME reup)
-set(APP_VERSION "1.5.1")
+set(APP_VERSION "1.5.2")
 
 project(${APP_NAME})
 

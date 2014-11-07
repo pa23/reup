@@ -22,7 +22,6 @@
 #define CONSTANTS_HPP
 
 #define CONFIGFILE     "reup.conf"
-#define TEMPFILE        "reup.log"
 #define PARAMDELIMITER "="
 #define ERRORMSGBLANK  "reup ERROR =>\t"
 #define WARNMSGBLANK   "reup WARNING =>\t"

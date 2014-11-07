@@ -80,11 +80,11 @@ void trimHex(const unique_ptr<Configuration> &conf) {
 
     for ( const string fileName : fileNames ) {
         if ( boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) {
-            system((conf->val_trimhexExec() + " " + fileName + " > " + TEMPFILE).c_str());
+            system((conf->val_trimhexExec() + " " + fileName + " > tmp").c_str());
         }
     }
 
-    boost::filesystem::remove(TEMPFILE);
+    boost::filesystem::remove("tmp");
 
     boost::filesystem::current_path(realProgPath);
 }
@@ -120,12 +120,12 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
             cout << ERRORMSGBLANK << "Errors during k2rei_swver parameter writing in " << elem << ".\n";
         }
         else {
-            system((conf->val_trimhexExec() + " " + elem + " > " + TEMPFILE).c_str());
+            system((conf->val_trimhexExec() + " " + elem + " > tmp").c_str());
             cout << MSGBLANK << "  Wrote hex ID: " << elem << "\n";
         }
     }
 
-    boost::filesystem::remove(TEMPFILE);
+    boost::filesystem::remove("tmp");
 
     boost::filesystem::current_path(realProgPath);
 }
@@ -152,10 +152,10 @@ void archHex(const unique_ptr<Configuration> &conf) {
         }
 
         /* agreement about archived hex-files format and extension */
-        system((conf->val_archivExec() + " " + conf->val_archivParam() + " " + fileName + ".7z " + fileName + " > " + TEMPFILE).c_str());
+        system((conf->val_archivExec() + " " + conf->val_archivParam() + " " + fileName + ".7z " + fileName + " > tmp").c_str());
     }
 
-    boost::filesystem::remove(TEMPFILE);
+    boost::filesystem::remove("tmp");
 
     boost::filesystem::current_path(realProgPath);
 }

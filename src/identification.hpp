@@ -24,7 +24,7 @@
 #include <string>
 
 #define PRGNAME "reup"
-#define PRGVERSION "1.5.1"
+#define PRGVERSION "1.5.2"
 #define PRGDESCRIPTION "Automatization of support YMZ-530 ECU SW repository."
 #define PRGCOPYRIGHTYEARS "2013-2014"
 #define PRGAUTHORS "Artem Petrov <pa2311@gmail.com>"
