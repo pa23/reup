@@ -60,7 +60,6 @@ void k2rei_swver::init(const string &hexP, const string &addr, size_t l) {
 bool k2rei_swver::read() {
 
     if ( !readHex() ) {
-
         cout << ERRORMSGBLANK << "Errors during hex file reading.\n";
         return false;
     }
@@ -68,13 +67,11 @@ bool k2rei_swver::read() {
     findAddrExt();
 
     if ( !findData() ) {
-
         cout << ERRORMSGBLANK << "Errors during finding data in hex file.\n";
         return false;
     }
 
     if ( !readData() ) {
-
         cout << ERRORMSGBLANK << "Errors during k2rei_swver data reading.\n";
         return false;
     }
@@ -85,13 +82,11 @@ bool k2rei_swver::read() {
 bool k2rei_swver::write(const string &str) {
 
     if ( !writeData(str) ) {
-
         cout << ERRORMSGBLANK << "Errors during writing data in hex.\n";
         return false;
     }
 
     if ( !writeHex() ) {
-
         cout << ERRORMSGBLANK << "Errors during writing hex file.\n";
         return false;
     }
@@ -102,7 +97,6 @@ bool k2rei_swver::write(const string &str) {
 bool k2rei_swver::readHex() {
 
     if ( !boost::filesystem::exists(boost::filesystem::path(m_hexFilePath)) ) {
-
         cout << ERRORMSGBLANK << "Hex file \"" << m_hexFilePath << "\" not found!\n";
         return false;
     }
@@ -222,7 +216,6 @@ bool k2rei_swver::readData() {
         str.push_back(ma_hexData[m_beginStrNum][j]);
 
         if ( str.size() == maxsize ) {
-
             m_readData = hexToString(str);
             return true;
         }
@@ -239,7 +232,6 @@ bool k2rei_swver::readData() {
             str.push_back(ma_hexData[i][j]);
 
             if ( str.size() == maxsize ) {
-
                 m_readData = hexToString(str);
                 return true;
             }
@@ -299,7 +291,6 @@ bool k2rei_swver::writeData(const string &str) {
         for ( size_t j=8; j<(m_correctStrDataSize-2); j++ ) {
 
             if ( pos == dataForWrite.size()-1 ) {
-
                 stop = true;
                 break;
             }
