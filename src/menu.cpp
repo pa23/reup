@@ -4,7 +4,7 @@
 
     File: menu.cpp
 
-    Copyright (C) 2013-2014 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -107,7 +107,11 @@ void updHexIdent(const unique_ptr<Configuration> &conf) {
 
     for ( const string elem : fileNames ) {
 
-        hexswver->init(elem, conf->val_k2rei_swver_addr(), conf-> val_k2rei_swver_lenght());
+        if ( !hexswver->setFileName(elem) ) {
+            cout << ERRORMSGBLANK << "Errors during parameters initialization of *_swver*.\n"
+                 << ERRORMSGBLANK << "File " << elem << " skipped.\n";
+            continue;
+        }
 
         if ( !hexswver->read() ) {
             cout << ERRORMSGBLANK << "Errors during k2rei_swver parameter reading in " << elem << ".\n";

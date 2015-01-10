@@ -4,7 +4,7 @@
 
     File: configuration.hpp
 
-    Copyright (C) 2013-2014 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,12 +62,6 @@ public:
     std::string val_archivParam() const {
         return m_archivParam;
     }
-    std::string val_k2rei_swver_addr() const {
-        return m_k2rei_swver_addr;
-    }
-    size_t val_k2rei_swver_lenght() const {
-        return m_k2rei_swver_lenght;
-    }
     std::vector<std::string> val_fileExtToDel() const {
         return ma_fileExtForDel;
     }
@@ -76,18 +70,16 @@ private:
 
     bool createBlank() const;
 
-    std::string m_localRepoDir     = "YMZ-530_ECU_SW_REPO";
-    std::string m_remoteRepoDir    = "";
-    std::string m_hexFilesDir      = "hex";
-    std::string m_mpkFilesDir      = "mpk";
-    std::string m_docFilesDir      = "doc";
-    std::string m_engDescription   = "YMZ-530_hex.html";
-    std::string m_trimhexDir       = "THex";
-    std::string m_trimhexExec      = "trimmhex.bat";
-    std::string m_archivExec       = "7z";
-    std::string m_archivParam      = "a";
-    std::string m_k2rei_swver_addr = "1E5B8A";
-    size_t m_k2rei_swver_lenght    = 64;
+    std::string m_localRepoDir   = "YMZ-530_ECU_SW_REPO";
+    std::string m_remoteRepoDir  = "";
+    std::string m_hexFilesDir    = "hex";
+    std::string m_mpkFilesDir    = "mpk";
+    std::string m_docFilesDir    = "doc";
+    std::string m_engDescription = "YMZ-530_hex.html";
+    std::string m_trimhexDir     = "THex";
+    std::string m_trimhexExec    = "trimmhex.bat";
+    std::string m_archivExec     = "7z";
+    std::string m_archivParam    = "a";
     std::vector<std::string> ma_fileExtForDel = {".hex", ".7z", ".zip", ".ini", ".txt"};
 
 };

@@ -4,7 +4,7 @@
 
     File: configuration.cpp
 
-    Copyright (C) 2013-2014 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -116,12 +116,6 @@ void Configuration::readConfigFile() {
             else if ( elem[0] == "Archivator parameters" ) {
                 m_archivParam = elem[1];
             }
-            else if ( elem[0] == "k2rei_swver address" ) {
-                m_k2rei_swver_addr = elem[1];
-            }
-            else if ( elem[0] == "k2rei_swver length" ) {
-                m_k2rei_swver_lenght = boost::lexical_cast<size_t>(elem[1]);
-            }
             else if ( elem[0] == "File extensions for deletion" ) {
 
                 ma_fileExtForDel.clear();
@@ -151,18 +145,16 @@ bool Configuration::createBlank() const {
          << "// Text after \"//\" is comment.\n"
          << "//\n\n";
 
-    fout << "Local repository directory"   << PARAMDELIMITER << m_localRepoDir       << "\n"
-         << "Remote repository directory"  << PARAMDELIMITER << m_remoteRepoDir      << "\n"
-         << "HEX files directory"          << PARAMDELIMITER << m_hexFilesDir        << "\n"
-         << "MPK files directory"          << PARAMDELIMITER << m_mpkFilesDir        << "\n"
-         << "DOC files directory"          << PARAMDELIMITER << m_docFilesDir        << "\n"
-         << "Engine description file"      << PARAMDELIMITER << m_engDescription     << "\n"
-         << "trimhex directory"            << PARAMDELIMITER << m_trimhexDir         << "\n"
-         << "trimhex executable"           << PARAMDELIMITER << m_trimhexExec        << "\n"
-         << "Archivator executable"        << PARAMDELIMITER << m_archivExec         << "\n"
-         << "Archivator parameters"        << PARAMDELIMITER << m_archivParam        << "\n"
-         << "k2rei_swver address"          << PARAMDELIMITER << m_k2rei_swver_addr   << "\n"
-         << "k2rei_swver length"           << PARAMDELIMITER << m_k2rei_swver_lenght << "\n"
+    fout << "Local repository directory"   << PARAMDELIMITER << m_localRepoDir   << "\n"
+         << "Remote repository directory"  << PARAMDELIMITER << m_remoteRepoDir  << "\n"
+         << "HEX files directory"          << PARAMDELIMITER << m_hexFilesDir    << "\n"
+         << "MPK files directory"          << PARAMDELIMITER << m_mpkFilesDir    << "\n"
+         << "DOC files directory"          << PARAMDELIMITER << m_docFilesDir    << "\n"
+         << "Engine description file"      << PARAMDELIMITER << m_engDescription << "\n"
+         << "trimhex directory"            << PARAMDELIMITER << m_trimhexDir     << "\n"
+         << "trimhex executable"           << PARAMDELIMITER << m_trimhexExec    << "\n"
+         << "Archivator executable"        << PARAMDELIMITER << m_archivExec     << "\n"
+         << "Archivator parameters"        << PARAMDELIMITER << m_archivParam    << "\n"
          << "File extensions for deletion" << PARAMDELIMITER;
 
     for ( size_t i=0; i<ma_fileExtForDel.size(); i++ ) {

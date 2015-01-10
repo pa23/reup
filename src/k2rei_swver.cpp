@@ -4,7 +4,7 @@
 
     File: k2rei_swver.cpp
 
-    Copyright (C) 2013-2014 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,8 +29,11 @@
 #include <sstream>
 #include <cstdint>
 
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 
 using std::string;
 using std::vector;
@@ -43,11 +46,53 @@ using std::hex;
 k2rei_swver::k2rei_swver() {
 }
 
-void k2rei_swver::init(const string &hexP, const string &addr, size_t l) {
+bool k2rei_swver::setFileName(const string &hexP) {
 
-    m_hexFilePath = hexP;
-    m_address = addr;
-    m_dataLength = l;
+    m_hexFileName = hexP;
+
+    if ( !setECUSW() ) {
+        return false;
+    }
+
+    reset();
+
+    return true;
+}
+
+bool k2rei_swver::setECUSW() {
+
+    vector<string> elem;
+    boost::split(elem, m_hexFileName, boost::is_any_of("_"));
+
+    if      ( elem[1] == "986.2.0.0" ) {
+        m_address       = "001E5B8A";
+        m_byteIndOffset = 0;
+        m_dataLength    = 64;
+    }
+    else if ( elem[1] == "766.1.2.0" ) {
+        m_address       = "001DFB9D";
+        m_byteIndOffset = 0;
+        m_dataLength    = 64;
+    }
+    else if ( elem[1] == "772.7.6.0" ) {
+        m_address       = "8004E4F1";
+        m_byteIndOffset = 16;
+        m_dataLength    = 64;
+    }
+    else if ( elem[1] == "772.8.5.1" ) {
+        m_address       = "8004E381";
+        m_byteIndOffset = 0;
+        m_dataLength    = 64;
+    }
+    else {
+        cout << ERRORMSGBLANK << "Unknown ECU software.\n";
+        return false;
+    }
+
+    return true;
+}
+
+void k2rei_swver::reset() {
 
     ma_hexData.clear();
     m_addrExtStrNum = 0;
@@ -96,15 +141,15 @@ bool k2rei_swver::write(const string &str) {
 
 bool k2rei_swver::readHex() {
 
-    if ( !boost::filesystem::exists(boost::filesystem::path(m_hexFilePath)) ) {
-        cout << ERRORMSGBLANK << "Hex file \"" << m_hexFilePath << "\" not found!\n";
+    if ( !boost::filesystem::exists(boost::filesystem::path(m_hexFileName)) ) {
+        cout << ERRORMSGBLANK << "Hex file \"" << m_hexFileName << "\" not found!\n";
         return false;
     }
 
-    ifstream fin(m_hexFilePath);
+    ifstream fin(m_hexFileName);
 
     if ( !fin ) {
-        cout << ERRORMSGBLANK << "Can not open file \"" << m_hexFilePath << "\" to read!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << m_hexFileName << "\" to read!\n";
         return false;
     }
 
@@ -117,7 +162,7 @@ bool k2rei_swver::readHex() {
 
         if ( !s.empty() ) {
 
-            s = s.substr(1, s.size()-1);
+            s = s.substr(1);
 
             stringstream ss;
             ss << s;
@@ -161,7 +206,7 @@ string k2rei_swver::checksum(const string &str) const {
 
 void k2rei_swver::findAddrExt() {
 
-    const boost::regex regexp(R"(.*)" + string("0200000400") + m_address.substr(0, 2) + R"(.*)");
+    const boost::regex regexp(R"(.*)" + string("02000004") + m_address.substr(0, 4) + R"(.*)");
 
     for ( size_t i=0; i<ma_hexData.size(); i++ ) {
 
@@ -182,9 +227,17 @@ bool k2rei_swver::findData() {
 
     const size_t strDataLength = v[0];
 
-    const uint16_t strtAddr = hexToNum(m_address) & (0xFFFF - strDataLength + 1);
+    const uint16_t strtAddr = hexToNum(m_address.substr(4)) & (0xFFFF - strDataLength + 1);
+    string hexStrtAddr = numToHex(strtAddr);
 
-    const boost::regex regexp(R"(^)" + numToHex(strDataLength) + numToHex(strtAddr) + R"(00.*)");
+    size_t addsymbnum = 4 - hexStrtAddr.size();
+    if ( hexStrtAddr.size() < 4 ) {
+        for ( size_t i=0; i<addsymbnum; i++ ) {
+            hexStrtAddr.insert(0, "0");
+        }
+    }
+
+    const boost::regex regexp(R"(^)" + numToHex(strDataLength) + hexStrtAddr + R"(00.*)");
 
     for ( size_t i=m_addrExtStrNum+1; i<ma_hexData.size(); i++ ) {
 
@@ -200,7 +253,7 @@ bool k2rei_swver::findData() {
         return false;
     }
 
-    m_firstByteInd = 8 + hexToNum(m_address.substr(m_address.size()-1, 1)) * 2;
+    m_firstByteInd = 8 + (hexToNum(m_address.substr(m_address.size()-1, 1)) + m_byteIndOffset) * 2;
 
     return true;
 }
@@ -312,10 +365,10 @@ bool k2rei_swver::writeData(const string &str) {
 
 bool k2rei_swver::writeHex() const {
 
-    ofstream fout(m_hexFilePath);
+    ofstream fout(m_hexFileName);
 
     if ( !fout ) {
-        cout << ERRORMSGBLANK << "Can not open file \"" << m_hexFilePath << "\" to write!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << m_hexFileName << "\" to write!\n";
         return false;
     }
 

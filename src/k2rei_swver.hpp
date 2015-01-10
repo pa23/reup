@@ -4,7 +4,7 @@
 
     File: k2rei_swver.hpp
 
-    Copyright (C) 2013-2014 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,12 +30,9 @@ public:
 
     k2rei_swver();
 
-    void init(
-            const std::string &,  // hex file path
-            const std::string &,  // k2rei_swver address
-            const size_t          // length
-            );
+    bool setFileName(const std::string &);
 
+    void reset();
     bool read();
     bool write(const std::string &);
 
@@ -45,8 +42,9 @@ public:
 
 private:
 
-    std::string m_hexFilePath;
+    std::string m_hexFileName;
     std::string m_address;
+    size_t m_byteIndOffset = 0;
     size_t m_dataLength = 0;
 
     std::vector<std::string> ma_hexData;   // readHex()
@@ -54,8 +52,9 @@ private:
     size_t m_beginStrNum = 0;              // findData()
     size_t m_correctStrDataSize = 0;
     size_t m_firstByteInd = 0;
-    std::string m_readData;              // readData()
+    std::string m_readData;                // readData()
 
+    bool setECUSW();
     bool readHex();
     std::string checksum(const std::string &) const;
     void findAddrExt();
