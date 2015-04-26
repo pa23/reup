@@ -44,6 +44,9 @@ public:
     std::string val_mpkFilesDir() const {
         return m_mpkFilesDir;
     }
+    std::string val_datFilesDir() const {
+        return m_datFilesDir;
+    }
     std::string val_docFilesDir() const {
         return m_docFilesDir;
     }
@@ -74,13 +77,14 @@ private:
     std::string m_remoteRepoDir  = "";
     std::string m_hexFilesDir    = "hex";
     std::string m_mpkFilesDir    = "mpk";
+    std::string m_datFilesDir    = "dat";
     std::string m_docFilesDir    = "doc";
     std::string m_engDescription = "YMZ-530_hex.html";
     std::string m_trimhexDir     = "THex";
     std::string m_trimhexExec    = "trimmhex.bat";
     std::string m_archivExec     = "7z";
     std::string m_archivParam    = "a";
-    std::vector<std::string> ma_fileExtForDel = {".hex", ".7z", ".zip", ".ini", ".txt"};
+    std::vector<std::string> ma_fileExtForDel = {".hex", ".7z", ".zip", ".dat", ".ini", ".txt"};
 
 };
 

@@ -79,9 +79,9 @@ void trimHex(const unique_ptr<Configuration> &conf) {
     boost::filesystem::current_path(trimhexDir);
 
     for ( const string fileName : fileNames ) {
-        if ( boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) {
+//        if ( boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) { // it is not actual now
             system((conf->val_trimhexExec() + " " + fileName + " > tmp").c_str());
-        }
+//        }
     }
 
     boost::filesystem::remove("tmp");
@@ -374,6 +374,7 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
     const boost::filesystem::path localRepoDirectory(conf->val_localRepoDir());
     const boost::filesystem::path hexDirectory(conf->val_hexFilesDir());
     const boost::filesystem::path mpkDirectory(conf->val_mpkFilesDir());
+    const boost::filesystem::path datDirectory(conf->val_datFilesDir());
     const boost::filesystem::path docDirectory(conf->val_docFilesDir());
 
     if ( !boost::filesystem::exists(localRepoDirectory / hexDirectory) ) {
@@ -383,6 +384,11 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     if ( !boost::filesystem::exists(localRepoDirectory / mpkDirectory) ) {
         cout << ERRORMSGBLANK << "Path \"" << (localRepoDirectory / mpkDirectory).string() << "\" not exists!\n";
+        return;
+    }
+
+    if ( !boost::filesystem::exists(localRepoDirectory / datDirectory) ) {
+        cout << ERRORMSGBLANK << "Path \"" << (localRepoDirectory / datDirectory).string() << "\" not exists!\n";
         return;
     }
 
@@ -401,7 +407,6 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
     cout << MSGBLANK << "  Archiving old repo directories...\n";
 
     for ( const string dir : dirNames ) {
-
         archDir(conf->val_archivExec() + " " + conf->val_archivParam(),
                 boost::filesystem::path(dir).filename().string(), false);
         boost::filesystem::remove_all(dir);
@@ -415,6 +420,7 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
     boost::filesystem::create_directory(newRemoteRepoDir);
     boost::filesystem::create_directory(newRemoteRepoDir / hexDirectory);
     boost::filesystem::create_directory(newRemoteRepoDir / mpkDirectory);
+    boost::filesystem::create_directory(newRemoteRepoDir / datDirectory);
     boost::filesystem::create_directory(newRemoteRepoDir / docDirectory);
 
     ofstream fout((newRemoteRepoDir / (newRemoteRepoDir.filename().string() + ".md5")).string());
@@ -425,7 +431,12 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
         md5needed = false;
     }
 
-    cout << MSGBLANK << "  Copying new repo...\n";
+    if ( md5needed ) {
+        cout << MSGBLANK << "  Copying new repo and calculating checksums...\n";
+    }
+    else {
+        cout << MSGBLANK << "  Copying new repo...\n";
+    }
 
     vector<string> filesForCopy = readDir(localRepoDirectory / hexDirectory, "", READDIR_FILESONLY);
 
@@ -448,6 +459,18 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
         if ( md5needed ) {
             fout << md5(readFile(copiedFile.string())) << " *" << (mpkDirectory / copiedFile.filename()).string() << "\n";
+        }
+    }
+
+    filesForCopy = readDir(localRepoDirectory / datDirectory, "", READDIR_FILESONLY);
+
+    for ( const string fileName : filesForCopy ) {
+
+        boost::filesystem::path copiedFile(newRemoteRepoDir / datDirectory / boost::filesystem::path(fileName));
+        boost::filesystem::copy_file(localRepoDirectory / datDirectory / boost::filesystem::path(fileName), copiedFile);
+
+        if ( md5needed ) {
+            fout << md5(readFile(copiedFile.string())) << " *" << (datDirectory / copiedFile.filename()).string() << "\n";
         }
     }
 

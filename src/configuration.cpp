@@ -98,6 +98,9 @@ void Configuration::readConfigFile() {
             else if ( elem[0] == "MPK files directory" ) {
                 m_mpkFilesDir = elem[1];
             }
+            else if ( elem[0] == "DAT files directory" ) {
+                m_datFilesDir = elem[1];
+            }
             else if ( elem[0] == "DOC files directory" ) {
                 m_docFilesDir = elem[1];
             }
@@ -149,6 +152,7 @@ bool Configuration::createBlank() const {
          << "Remote repository directory"  << PARAMDELIMITER << m_remoteRepoDir  << "\n"
          << "HEX files directory"          << PARAMDELIMITER << m_hexFilesDir    << "\n"
          << "MPK files directory"          << PARAMDELIMITER << m_mpkFilesDir    << "\n"
+         << "DAT files directory"          << PARAMDELIMITER << m_datFilesDir    << "\n"
          << "DOC files directory"          << PARAMDELIMITER << m_docFilesDir    << "\n"
          << "Engine description file"      << PARAMDELIMITER << m_engDescription << "\n"
          << "trimhex directory"            << PARAMDELIMITER << m_trimhexDir     << "\n"

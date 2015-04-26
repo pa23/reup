@@ -22,9 +22,9 @@
 #define IDENTIFICATION_HPP
 
 #define PRGNAME "reup"
-#define PRGVERSION "1.6.0"
+#define PRGVERSION "1.7.0"
 #define PRGDESCRIPTION "Automatization of support YMZ-530 ECU SW repository."
-#define PRGCOPYRIGHTYEARS "2013-2014"
+#define PRGCOPYRIGHTYEARS "2013-2015"
 #define PRGAUTHORS "Artem Petrov <pa2311@gmail.com>"
 #define PRGSOURCECODEHOSTING "https://github.com/pa23/reup"
 #define PRGAUTHORSBLOG "http://pa2311.blogspot.com"
