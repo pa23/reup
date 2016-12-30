@@ -4,7 +4,7 @@
 
     File: configuration.hpp
 
-    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -83,8 +83,8 @@ private:
     std::string m_trimhexDir     = "THex";
     std::string m_trimhexExec    = "trimmhex.bat";
     std::string m_archivExec     = "7z";
-    std::string m_archivParam    = "a";
-    std::vector<std::string> ma_fileExtForDel = {".hex", ".7z", ".zip", ".dat", ".ini", ".txt"};
+    std::string m_archivParam    = "a -mx=9";
+    std::vector<std::string> ma_fileExtForDel = {".hex", ".7z", ".zip", ".edc", ".ini", ".txt"};
 
 };
 

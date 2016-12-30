@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.7)
 
 set(APP_NAME reup)
-set(APP_VERSION "1.7.0")
+set(APP_VERSION "1.11.0")
 
 project(${APP_NAME})
 
@@ -31,7 +31,11 @@ set(
     src/md5.cpp
 )
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -W -pedantic")
+if(MINGW)
+    set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -W -pedantic -march=i686")
+else()
+    set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -W -pedantic")
+endif()
 
 if(MINGW)
     set(Boost_USE_STATIC_LIBS ON)

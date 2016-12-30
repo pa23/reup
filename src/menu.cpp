@@ -4,7 +4,7 @@
 
     File: menu.cpp
 
-    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -150,8 +150,7 @@ void archHex(const unique_ptr<Configuration> &conf) {
 
     for ( const string fileName : fileNames ) {
 
-        if ( boost::filesystem::exists(boost::filesystem::path(fileName+".7z")) ||
-             boost::filesystem::file_size(boost::filesystem::path(fileName)) < 5000000 ) {
+        if ( boost::filesystem::exists(boost::filesystem::path(fileName+"."+conf->val_archivExec())) ) {
             continue;
         }
 
@@ -290,6 +289,8 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
                     );
     }
 
+    //
+
     const boost::filesystem::path mpkFilesDir(conf->val_mpkFilesDir());
     const boost::filesystem::path localRepoMpkPath = localRepoDir / mpkFilesDir;
 
@@ -325,6 +326,47 @@ void addNewToRepo(const unique_ptr<Configuration> &conf) {
         boost::filesystem::copy_file(
                     newPath / boost::filesystem::path(newFileName),
                     localRepoMpkPath / boost::filesystem::path(newFileName),
+                    boost::filesystem::copy_option::overwrite_if_exists
+                    );
+    }
+
+    //
+
+    const boost::filesystem::path datFilesDir(conf->val_datFilesDir());
+    const boost::filesystem::path localRepoDatPath = localRepoDir / datFilesDir;
+
+    if ( !boost::filesystem::exists(localRepoDatPath) ) {
+        cout << ERRORMSGBLANK << "Path \"" << localRepoDatPath.string() << "\" not exists!\n";
+        return;
+    }
+
+    newFileNames = readDir(newPath, ".edc", READDIR_FILESONLY);
+    localRepoFileNames = readDir(localRepoDatPath, ".edc", READDIR_FILESONLY);
+
+    for ( const string newFileName : newFileNames ) {
+
+        boost::split(parts, newFileName, boost::is_any_of("_"));
+
+        /* agreement about hex-file name. 5 parts. parts[2] is engine model */
+
+        if ( parts.size() != 5 ) {
+            continue;
+        }
+
+        for ( const string localRepoFileName : localRepoFileNames ) {
+
+            regexp = R"(.*)" + parts[2] + R"(_+.*(\.edc){1}$)";
+
+            if ( boost::regex_match(localRepoFileName, regexp) ) {
+                boost::filesystem::remove(
+                            localRepoDatPath / boost::filesystem::path(localRepoFileName)
+                            );
+            }
+        }
+
+        boost::filesystem::copy_file(
+                    newPath / boost::filesystem::path(newFileName),
+                    localRepoDatPath / boost::filesystem::path(newFileName),
                     boost::filesystem::copy_option::overwrite_if_exists
                     );
     }

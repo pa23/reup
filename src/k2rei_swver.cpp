@@ -4,7 +4,7 @@
 
     File: k2rei_swver.cpp
 
-    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -65,22 +65,27 @@ bool k2rei_swver::setECUSW() {
     boost::split(elem, m_hexFileName, boost::is_any_of("_"));
 
     if      ( elem[1] == "986.2.0.0" ) {
-        m_address       = "001E5B8A";
+        m_address       = IDADDR_986V200;
+        m_byteIndOffset = 0;
+        m_dataLength    = 64;
+    }
+    else if ( elem[1] == "986.3.2.0" ) {
+        m_address       = IDADDR_986V320;
         m_byteIndOffset = 0;
         m_dataLength    = 64;
     }
     else if ( elem[1] == "766.1.2.0" ) {
-        m_address       = "001DFB9D";
+        m_address       = IDADDR_766V120;
         m_byteIndOffset = 0;
         m_dataLength    = 64;
     }
-    else if ( elem[1] == "772.7.6.0" ) {
-        m_address       = "8004E4F1";
-        m_byteIndOffset = 16;
+    else if ( elem[1] == "1639.1.2.0" ) {
+        m_address       = IDADDR_1639V120;
+        m_byteIndOffset = 0;
         m_dataLength    = 64;
     }
-    else if ( elem[1] == "772.8.5.1" ) {
-        m_address       = "8004E381";
+    else if ( elem[1] == "1639.3.0.0" ) {
+        m_address       = IDADDR_1639V300;
         m_byteIndOffset = 0;
         m_dataLength    = 64;
     }

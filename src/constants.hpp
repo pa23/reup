@@ -4,7 +4,7 @@
 
     File: constants.hpp
 
-    Copyright (C) 2013-2015 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,6 +26,12 @@
 #define ERRORMSGBLANK  "reup ERROR =>\t"
 #define WARNMSGBLANK   "reup WARNING =>\t"
 #define MSGBLANK       "reup ->\t"
+
+#define IDADDR_986V200  "001E5B8A"
+#define IDADDR_986V320  "001E5C0A"
+#define IDADDR_766V120  "001DFB9D"
+#define IDADDR_1639V120 "8004F859"
+#define IDADDR_1639V300 "8004F84B"
 
 enum {
     READDIR_FILESONLY,
