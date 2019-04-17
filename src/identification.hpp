@@ -1,10 +1,10 @@
 /*
     reup
-    Automatization of support YMZ-530 ECU SW repository.
+    Automatization of YMZ ECU software repository support.
 
     File: identification.hpp
 
-    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2019 Artem Petrov <pa23666@yandex.ru>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@
 #define IDENTIFICATION_HPP
 
 #define PRGNAME "reup"
-#define PRGVERSION "1.11.0"
-#define PRGDESCRIPTION "Automatization of support YMZ-530 ECU SW repository."
-#define PRGCOPYRIGHTYEARS "2013-2016"
-#define PRGAUTHORS "Artem Petrov <pa2311@gmail.com>"
+#define PRGVERSION "1.13.1"
+#define PRGDESCRIPTION "Automatization of YMZ ECU software repository support."
+#define PRGCOPYRIGHTYEARS "2013-2019"
+#define PRGAUTHORS "Artem Petrov <pa23666@yandex.ru>"
 #define PRGSOURCECODEHOSTING "https://github.com/pa23/reup"
 #define PRGAUTHORSBLOG "http://pa2311.blogspot.com"
 #define PRGLICENSEINFORMATION "This program comes with ABSOLUTELY NO WARRANTY. This is free software,\nand you are welcome to redistribute it under the terms of the GNU General\nPublic License version 3. See http://www.gnu.org/licenses/."

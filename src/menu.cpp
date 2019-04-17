@@ -1,10 +1,10 @@
 /*
     reup
-    Automatization of support YMZ-530 ECU SW repository.
+    Automatization of YMZ ECU software repository support.
 
     File: menu.cpp
 
-    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2019 Artem Petrov <pa23666@yandex.ru>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 #include <fstream>
 #include <sstream>
 
-#define BOOST_NO_CXX11_SCOPED_ENUMS
+//#define BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
@@ -406,6 +406,8 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
         return;
     }
 
+    //
+
     const boost::filesystem::path remoteRepoDirectory(conf->val_remoteRepoDir());
 
     if ( !boost::filesystem::exists(remoteRepoDirectory) ) {
@@ -439,8 +441,6 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
         return;
     }
 
-    //
-
     vector<string> dirNames = readDir(remoteRepoDirectory, "", READDIR_DIRSONLY);
 
     const boost::filesystem::path realProgPath = boost::filesystem::current_path();
@@ -457,7 +457,7 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
     boost::filesystem::current_path(realProgPath);
 
     const boost::filesystem::path newRemoteRepoDir(remoteRepoDirectory /
-                                                   (localRepoDirectory.filename().string() + "__" + currDateTime()));
+                                                   (localRepoDirectory.filename().string() + "__" + currDateTime(false)));
 
     boost::filesystem::create_directory(newRemoteRepoDir);
     boost::filesystem::create_directory(newRemoteRepoDir / hexDirectory);
@@ -465,7 +465,9 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
     boost::filesystem::create_directory(newRemoteRepoDir / datDirectory);
     boost::filesystem::create_directory(newRemoteRepoDir / docDirectory);
 
-    ofstream fout((newRemoteRepoDir / (newRemoteRepoDir.filename().string() + ".md5")).string());
+    string md5filename(newRemoteRepoDir.filename().string() + ".md5");
+
+    ofstream fout(md5filename);
     bool md5needed = true;
 
     if ( !fout ) {
@@ -484,11 +486,12 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     for ( const string fileName : filesForCopy ) {
 
+        boost::filesystem::path fileForCopy(localRepoDirectory / hexDirectory / boost::filesystem::path(fileName));
         boost::filesystem::path copiedFile(newRemoteRepoDir / hexDirectory / boost::filesystem::path(fileName));
-        boost::filesystem::copy_file(localRepoDirectory / hexDirectory / boost::filesystem::path(fileName), copiedFile);
+        boost::filesystem::copy_file(fileForCopy, copiedFile);
 
         if ( md5needed ) {
-            fout << md5(readFile(copiedFile.string())) << " *" << (hexDirectory / copiedFile.filename()).string() << "\n";
+            fout << md5(readFile(fileForCopy.string())) << " *" << (hexDirectory / fileName).string() << "\n";
         }
     }
 
@@ -496,11 +499,12 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     for ( const string fileName : filesForCopy ) {
 
+        boost::filesystem::path fileForCopy(localRepoDirectory / mpkDirectory / boost::filesystem::path(fileName));
         boost::filesystem::path copiedFile(newRemoteRepoDir / mpkDirectory / boost::filesystem::path(fileName));
-        boost::filesystem::copy_file(localRepoDirectory / mpkDirectory / boost::filesystem::path(fileName), copiedFile);
+        boost::filesystem::copy_file(fileForCopy, copiedFile);
 
         if ( md5needed ) {
-            fout << md5(readFile(copiedFile.string())) << " *" << (mpkDirectory / copiedFile.filename()).string() << "\n";
+            fout << md5(readFile(fileForCopy.string())) << " *" << (mpkDirectory / fileName).string() << "\n";
         }
     }
 
@@ -508,11 +512,12 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     for ( const string fileName : filesForCopy ) {
 
+        boost::filesystem::path fileForCopy(localRepoDirectory / datDirectory / boost::filesystem::path(fileName));
         boost::filesystem::path copiedFile(newRemoteRepoDir / datDirectory / boost::filesystem::path(fileName));
-        boost::filesystem::copy_file(localRepoDirectory / datDirectory / boost::filesystem::path(fileName), copiedFile);
+        boost::filesystem::copy_file(fileForCopy, copiedFile);
 
         if ( md5needed ) {
-            fout << md5(readFile(copiedFile.string())) << " *" << (datDirectory / copiedFile.filename()).string() << "\n";
+            fout << md5(readFile(fileForCopy.string())) << " *" << (datDirectory / fileName).string() << "\n";
         }
     }
 
@@ -520,15 +525,40 @@ void publishRepo(const unique_ptr<Configuration> &conf) {
 
     for ( const string fileName : filesForCopy ) {
 
+        boost::filesystem::path fileForCopy(localRepoDirectory / docDirectory / boost::filesystem::path(fileName));
         boost::filesystem::path copiedFile(newRemoteRepoDir / docDirectory / boost::filesystem::path(fileName));
-        boost::filesystem::copy_file(localRepoDirectory / docDirectory / boost::filesystem::path(fileName), copiedFile);
+        boost::filesystem::copy_file(fileForCopy, copiedFile);
 
         if ( md5needed ) {
-            fout << md5(readFile(copiedFile.string())) << " *" << (docDirectory / copiedFile.filename()).string() << "\n";
+            fout << md5(readFile(fileForCopy.string())) << " *" << (docDirectory / fileName).string() << "\n";
         }
     }
 
     fout.close();
+
+    boost::filesystem::copy_file(md5filename, newRemoteRepoDir / boost::filesystem::path(md5filename));
+    boost::filesystem::remove(boost::filesystem::path(md5filename));
+
+    //
+
+    if ( conf->val_engInfoDir().empty() ) {
+        cout << ERRORMSGBLANK << "Engine info directory not defined! Operation will be skipped.\n";
+        return;
+    }
+
+    const boost::filesystem::path engInfoDirectory(conf->val_engInfoDir());
+
+    if ( !boost::filesystem::exists(engInfoDirectory) ) {
+        cout << ERRORMSGBLANK << "Path \"" << engInfoDirectory.string() << "\" not exists!\n";
+        return;
+    }
+
+    cout << MSGBLANK << "  Copying engine description file to engine information directory...\n";
+
+    boost::filesystem::path copiedEngFile(engInfoDirectory / boost::filesystem::path(conf->val_engDescription()));
+    boost::filesystem::copy_file(localRepoDirectory / docDirectory / boost::filesystem::path(conf->val_engDescription()),
+                                 copiedEngFile,
+                                 boost::filesystem::copy_option::overwrite_if_exists);
 }
 
 void archLocalRepo(const unique_ptr<Configuration> &conf) {

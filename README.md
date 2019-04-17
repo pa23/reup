@@ -1,4 +1,4 @@
 reup
 ====
 
-Automatization of support YMZ-530 ECU SW repository.
+Automatization of YMZ ECU software repository support.

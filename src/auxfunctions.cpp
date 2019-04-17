@@ -1,10 +1,10 @@
 /*
     reup
-    Automatization of support YMZ-530 ECU SW repository.
+    Automatization of YMZ ECU software repository support.
 
     File: auxfunctions.cpp
 
-    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2019 Artem Petrov <pa23666@yandex.ru>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@
 #include <memory>
 #include <ctime>
 
-#define BOOST_NO_CXX11_SCOPED_ENUMS
+//#define BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
@@ -102,7 +102,7 @@ vector<string> readDir(
     return fileNames;
 }
 
-string currDateTime() {
+string currDateTime(bool dateAndTime) {
 
     time_t t = time(NULL);
     struct tm *dtnow = localtime(&t);
@@ -113,7 +113,12 @@ string currDateTime() {
     const string hour = boost::lexical_cast<string>(dtnow->tm_hour);
     const string min  = boost::lexical_cast<string>(dtnow->tm_min);
 
-    return year + "-" + trimDate(mon) + "-" + trimDate(day) + "_" + trimDate(hour) + "-" + trimDate(min);
+    if ( dateAndTime ) {
+        return year + "-" + trimDate(mon) + "-" + trimDate(day) + "_" + trimDate(hour) + "-" + trimDate(min);
+    }
+    else {
+        return year + "-" + trimDate(mon) + "-" + trimDate(day);
+    }
 }
 
 string trimDate(const string &str) {
@@ -245,7 +250,7 @@ void archDir(const string &command, const string &path, bool withDateTime) {
     }
 
     if ( withDateTime ) {
-        system((command + " " + path + "__" + currDateTime() + ".7z " + path + " > tmp").c_str());
+        system((command + " " + path + "__" + currDateTime(false) + ".7z " + path + " > tmp").c_str());
     }
     else {
         system((command + " " + path + ".7z " + path + " > tmp").c_str());

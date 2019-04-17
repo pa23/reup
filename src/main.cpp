@@ -1,10 +1,10 @@
 /*
     reup
-    Automatization of support YMZ-530 ECU SW repository.
+    Automatization of YMZ ECU software repository support.
 
     File: main.cpp
 
-    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2019 Artem Petrov <pa23666@yandex.ru>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -99,7 +99,7 @@ void execTask(const unique_ptr<Configuration> &conf, const size_t currTask) {
     cout << MSGBLANK << "Done.\n";
 }
 
-int main() {
+int main(int argc, char **argv) {
 
     cout << "\n\t" << PRGNAME << " v" << PRGVERSION << "\n"
          << "\t" << PRGDESCRIPTION << "\n\n"
@@ -108,7 +108,19 @@ int main() {
          << "Author's blog (RU): " << PRGAUTHORSBLOG << "\n\n"
          << PRGLICENSEINFORMATION << "\n\n";
 
+    string prgConfig;
+
+    if ( argc == 2 ) {
+        prgConfig = argv[1];
+    }
+    else {
+        prgConfig = CONFIGFILE;
+    }
+
+    cout << "Config file: " << prgConfig << "\n";
+
     unique_ptr<Configuration> conf(new Configuration());
+    conf->setConfigFilename(prgConfig);
     conf->readConfigFile();
 
     bool work = true;

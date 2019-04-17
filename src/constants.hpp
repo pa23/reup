@@ -1,10 +1,10 @@
 /*
     reup
-    Automatization of support YMZ-530 ECU SW repository.
+    Automatization of YMZ ECU software repository support.
 
     File: constants.hpp
 
-    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2019 Artem Petrov <pa23666@yandex.ru>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -1,10 +1,10 @@
 /*
     reup
-    Automatization of support YMZ-530 ECU SW repository.
+    Automatization of YMZ ECU software repository support.
 
     File: configuration.hpp
 
-    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2019 Artem Petrov <pa23666@yandex.ru>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ public:
 
     Configuration();
 
+    void setConfigFilename(const std::string &);
     void readConfigFile();
 
     std::string val_localRepoDir() const {
@@ -37,6 +38,9 @@ public:
     }
     std::string val_remoteRepoDir() const {
         return m_remoteRepoDir;
+    }
+    std::string val_engInfoDir() const {
+        return m_engInfoDir;
     }
     std::string val_hexFilesDir() const {
         return m_hexFilesDir;
@@ -73,8 +77,11 @@ private:
 
     bool createBlank() const;
 
+    std::string m_configFilename;
+
     std::string m_localRepoDir   = "YMZ-530_ECU_SW_REPO";
     std::string m_remoteRepoDir  = "";
+    std::string m_engInfoDir     = "";
     std::string m_hexFilesDir    = "hex";
     std::string m_mpkFilesDir    = "mpk";
     std::string m_datFilesDir    = "dat";

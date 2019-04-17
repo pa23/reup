@@ -1,10 +1,10 @@
 /*
     reup
-    Automatization of support YMZ-530 ECU SW repository.
+    Automatization of YMZ ECU software repository support.
 
     File: auxfunctions.hpp
 
-    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2019 Artem Petrov <pa23666@yandex.ru>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #include <vector>
 #include <memory>
 
-#define BOOST_NO_CXX11_SCOPED_ENUMS
+//#define BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <boost/filesystem.hpp>
 
@@ -37,7 +37,7 @@ std::vector<std::string> readDir(
         size_t                           // selection mode
         );
 
-std::string currDateTime();
+std::string currDateTime(bool); // false - only date, true - date and time
 std::string trimDate(const std::string &);
 
 std::string readFile(const std::string &);

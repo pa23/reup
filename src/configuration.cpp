@@ -1,10 +1,10 @@
 /*
     reup
-    Automatization of support YMZ-530 ECU SW repository.
+    Automatization of YMZ ECU software repository support.
 
     File: configuration.cpp
 
-    Copyright (C) 2013-2016 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2013-2019 Artem Petrov <pa23666@yandex.ru>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 
-#define BOOST_NO_CXX11_SCOPED_ENUMS
+//#define BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
@@ -42,28 +42,32 @@ using std::ofstream;
 Configuration::Configuration() {
 }
 
+void Configuration::setConfigFilename(const string &filename) {
+    m_configFilename = filename;
+}
+
 void Configuration::readConfigFile() {
 
-    const boost::filesystem::path cfgfile(CONFIGFILE);
+    const boost::filesystem::path cfgfile(m_configFilename);
 
     if ( !boost::filesystem::exists(cfgfile) ) {
 
-        cout << ERRORMSGBLANK << "Cofiguration file \"" << CONFIGFILE << "\" not found!\n"
+        cout << ERRORMSGBLANK << "Cofiguration file \"" << m_configFilename << "\" not found!\n"
              << ERRORMSGBLANK << PRGNAME << " will create blank of configuration.\n"
-             << ERRORMSGBLANK << "Please edit file \"" << CONFIGFILE << "\" and reload program configuration.\n";
+             << ERRORMSGBLANK << "Please edit file \"" << m_configFilename << "\" and reload program configuration.\n";
 
         if ( !createBlank() ) {
-            cout << ERRORMSGBLANK << "Can not create file \"" << CONFIGFILE << "\"!\n"
+            cout << ERRORMSGBLANK << "Can not create file \"" << m_configFilename << "\"!\n"
                  << ERRORMSGBLANK << "Default values will be used.\n";
         }
 
         return;
     }
 
-    ifstream fin(CONFIGFILE);
+    ifstream fin(m_configFilename);
 
     if ( !fin ) {
-        cout << ERRORMSGBLANK << "Can not open file \"" << CONFIGFILE << "\" to read!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << m_configFilename << "\" to read!\n";
         return;
     }
 
@@ -91,6 +95,9 @@ void Configuration::readConfigFile() {
             }
             else if ( elem[0] == "Remote repository directory" ) {
                 m_remoteRepoDir = elem[1];
+            }
+            else if ( elem[0] == "Engine information directory" ) {
+                m_engInfoDir = elem[1];
             }
             else if ( elem[0] == "HEX files directory" ) {
                 m_hexFilesDir = elem[1];
@@ -135,10 +142,10 @@ void Configuration::readConfigFile() {
 
 bool Configuration::createBlank() const {
 
-    ofstream fout(CONFIGFILE);
+    ofstream fout(m_configFilename);
 
     if ( !fout ) {
-        cout << ERRORMSGBLANK << "Can not open file \"" << CONFIGFILE << "\" to write!\n";
+        cout << ERRORMSGBLANK << "Can not open file \"" << m_configFilename << "\" to write!\n";
         return false;
     }
 
@@ -150,6 +157,7 @@ bool Configuration::createBlank() const {
 
     fout << "Local repository directory"   << PARAMDELIMITER << m_localRepoDir   << "\n"
          << "Remote repository directory"  << PARAMDELIMITER << m_remoteRepoDir  << "\n"
+         << "Engine information directory" << PARAMDELIMITER << m_engInfoDir     << "\n"
          << "HEX files directory"          << PARAMDELIMITER << m_hexFilesDir    << "\n"
          << "MPK files directory"          << PARAMDELIMITER << m_mpkFilesDir    << "\n"
          << "DAT files directory"          << PARAMDELIMITER << m_datFilesDir    << "\n"
